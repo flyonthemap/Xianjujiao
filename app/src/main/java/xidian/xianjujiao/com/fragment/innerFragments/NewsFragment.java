@@ -43,6 +43,7 @@ import xidian.xianjujiao.com.view.ImageCycleView;
  * 新闻类的Fragemnt
  */
 public class NewsFragment extends Fragment implements AdapterView.OnItemClickListener, AbsListView.OnScrollListener {
+    private static final String TAG = "NewsFragment";
     @Bind(R.id.multiplestatusview)
     MultipleStatusView multiplestatusview;
     @Bind(R.id.ptr_layout)
@@ -57,7 +58,7 @@ public class NewsFragment extends Fragment implements AdapterView.OnItemClickLis
     private List<ChapterListItem> data = new ArrayList<>();
     //Android自带下拉刷新控件
     private List<ChapterListItem> chapterListItems;
-    private int currenPage = 1;//当前页
+    private int currentPage = 1;//当前页
     private boolean isBottom;//是否到底部的标记
     private boolean isLoadData = false;//判断是否已经在加载数据
     private String url;
@@ -82,11 +83,11 @@ public class NewsFragment extends Fragment implements AdapterView.OnItemClickLis
         }
         news_lv = (ListView) view.findViewById(R.id.content_view);
 
-        //添加listview头部控件
+        //添加头部轮播控件
         mHeadView = mInflater.inflate(R.layout.banner_view, null);
         mImageCycleView = (ImageCycleView) mHeadView.findViewById(R.id.icv_topView);
         news_lv.addHeaderView(mHeadView);
-        //添加底部控件
+        //添加底部加载更多控件
         mFootView = mInflater.inflate(R.layout.listview_footer, null);
         news_lv.addFooterView(mFootView, null, false);
         adapter = new ListViewAdapter(getActivity(), data);
@@ -143,6 +144,7 @@ public class NewsFragment extends Fragment implements AdapterView.OnItemClickLis
         x.http().get(new RequestParams(stUrl), new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
+
                 multiplestatusview.showContent();
                 String json = new String(result);
                 chapterListItems = JsonUtils.parseChapterJson(json);
@@ -233,10 +235,10 @@ public class NewsFragment extends Fragment implements AdapterView.OnItemClickLis
         //isBottom是自定义的boolean变量，用于标记是否滑动到底部
         if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE && isBottom && !isLoadData) {
             //如果加载到底部则加载下一页的数据显示到listview中
-            currenPage++;
+            currentPage++;
             //加载新数据
             isLoadData = true;//将加载数据的状态设置为true
-            url = String.format(API.NEWS_URL, currenPage);
+            url = String.format(API.NEWS_URL, currentPage);
             mFootView.setVisibility(View.VISIBLE);//设置进度条出现
             //xutils加载网络数据
             x.http().get(new RequestParams(url), new Callback.CommonCallback<String>() {

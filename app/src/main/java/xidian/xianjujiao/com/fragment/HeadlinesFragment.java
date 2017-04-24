@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import xidian.xianjujiao.com.R;
+import xidian.xianjujiao.com.activity.ChannelActivity;
 import xidian.xianjujiao.com.adapter.TabPageIndicatorAdapter;
 import xidian.xianjujiao.com.fragment.innerFragments.CommondFragment;
 import xidian.xianjujiao.com.fragment.innerFragments.NewsFragment;
@@ -23,7 +24,7 @@ import xidian.xianjujiao.com.fragment.innerFragments.NewsFragment;
 /**
  * 文章的Fragment
  */
-public class ArticleFragment extends Fragment {
+public class HeadlinesFragment extends Fragment {
     //标题
     private static final String[] TITLE = new String[]{"新闻", "杂谈", "评测", "前瞻",
             "原创", "盘点", "硬件", "时事"};
@@ -39,11 +40,13 @@ public class ArticleFragment extends Fragment {
     private List<Fragment> fragments = new ArrayList<>();
     private TextView tv_title;
     private ImageButton main_action_menu;
+    private ImageButton ibSearch;
+    private ImageButton ibMoreChannel;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_article, container, false);
+        view = inflater.inflate(R.layout.fragment_headlines, container, false);
         initData();
         initView();
         setAdapter();
@@ -55,12 +58,14 @@ public class ArticleFragment extends Fragment {
     private void initView() {
         //隐藏toolbar menu控件
         main_action_menu = (ImageButton) view.findViewById(R.id.main_action_menu);
+        ibSearch = (ImageButton) view.findViewById(R.id.ib_search);
         //获取到标题栏控件
         tv_title = (TextView) view.findViewById(R.id.title);
         tv_title.setText("文章");
         article_viewpager = (ViewPager) view.findViewById(R.id.article_viewpager);
         //实例化TabPageIndicator然后设置ViewPager与之关联
         indicator = (TabPageIndicator) view.findViewById(R.id.article_indicator);
+        ibMoreChannel = (ImageButton) view.findViewById(R.id.btn_more_channel);
 
     }
 
@@ -105,6 +110,13 @@ public class ArticleFragment extends Fragment {
                 //跳转到个人设置界面
 //                Intent intent=new Intent(getActivity(), SettingActivity.class);
 //                startActivity(intent);
+            }
+        });
+        ibMoreChannel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), ChannelActivity.class);
+                startActivity(intent);
             }
         });
     }

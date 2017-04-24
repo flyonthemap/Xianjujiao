@@ -10,7 +10,7 @@
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="45dp">
         <ImageButton
             android:id="@+id/main_action_menu"
             android:layout_width="45dp"
@@ -23,11 +23,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="标题"
+            android:text="聚焦西安"
             android:layout_gravity="center"
             android:textColor="#ffffff"
             android:textSize="23sp" />
-
+        <ImageButton
+            android:id="@+id/ib_search"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_gravity="end"
+            android:layout_marginRight="15dp"
+            android:src="@drawable/search"
+            android:background="@null"/>
 
     </android.support.v7.widget.Toolbar>
 

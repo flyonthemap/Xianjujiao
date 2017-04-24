@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.WindowManager;
 import android.widget.RadioButton;
@@ -17,17 +16,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import xidian.xianjujiao.com.adapter.MainFragmentPageAdapter;
-import xidian.xianjujiao.com.fragment.ArticleFragment;
+import xidian.xianjujiao.com.fragment.HeadlinesFragment;
 import xidian.xianjujiao.com.fragment.ForumFragment;
 import xidian.xianjujiao.com.fragment.GameFragment;
 import xidian.xianjujiao.com.fragment.VideoFragment;
 import xidian.xianjujiao.com.utils.SystemBarTintManager;
-import xidian.xianjujiao.com.utils.ToastUtil;
 import xidian.xianjujiao.com.view.TipsToast;
 
 public class MainActivity extends FragmentActivity {
     private ViewPager main_viewPager;
-    private List<Fragment> fragemnts = new ArrayList<>();
+    private List<Fragment> fragments = new ArrayList<>();
     private MainFragmentPageAdapter adapter;
     private RadioGroup rgp;
     private TipsToast tipsToast;
@@ -108,20 +106,20 @@ public class MainActivity extends FragmentActivity {
 
     //初始化数据
     private void initData() {
-        ArticleFragment airticle_fragemnt = new ArticleFragment();
+        HeadlinesFragment headlines_Fragments = new HeadlinesFragment();
         ForumFragment forum_Fragment = new ForumFragment();
         GameFragment game_Fragment = new GameFragment();
         VideoFragment video_Fragment = new VideoFragment();
-        fragemnts.add(airticle_fragemnt);//文章
-        fragemnts.add(video_Fragment);//视频
-        fragemnts.add(forum_Fragment);//论坛
-        fragemnts.add(game_Fragment);//游戏
+        fragments.add(headlines_Fragments);//文章
+        fragments.add(video_Fragment);//视频
+        fragments.add(forum_Fragment);//论坛
+        fragments.add(game_Fragment);//游戏
     }
 
     //设置适配器
     private void setAdapter() {
         //实例化适配器
-        adapter = new MainFragmentPageAdapter(getSupportFragmentManager(), fragemnts);
+        adapter = new MainFragmentPageAdapter(getSupportFragmentManager(), fragments);
         //设置适配器
         main_viewPager.setAdapter(adapter);
     }

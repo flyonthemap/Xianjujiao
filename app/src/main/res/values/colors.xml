@@ -12,4 +12,15 @@
     <color name="text_gray">#ff909090</color>
     <color name="text_black">#212121</color>
     <color name="divider">#20000000</color>
+
+    <color name="subscribe_activity_bg">#ffefefef</color>
+    <color name="subscribe_activity_bg_night">#ff252525</color>
+    <color name="subscribe_seperate_line">#ffcdcdcd</color>
+    <color name="subscribe_seperate_line_night">#ff464646</color>
+
+    <item name="subscribe_item_text_color_normal" type="color">@color/vpi__background_holo_dark</item>
+
+    <color name="subscribe_item_text_color_pressed">#ffb9b9b9</color>
+
+    <item name="subscribe_item_text_color_normal_night" type="color">@color/cardview_dark_background</item>
 </resources>

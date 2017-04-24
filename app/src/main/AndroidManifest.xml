@@ -15,6 +15,8 @@
     <!-- 硬件加速对X5视频播放非常重要，建议开启 -->
     <uses-permission android:name="android.permission.GET_TASKS"/>
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <!-- 震动权限 -->
+    <uses-permission android:name="android.permission.VIBRATE"/>
     <application
         android:name=".application.BaseApplication"
         android:allowBackup="true"
@@ -31,6 +33,8 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity android:name=".activity.ChannelActivity" >
         </activity>
         <!--极光推送相关配置  start-->
         <service
