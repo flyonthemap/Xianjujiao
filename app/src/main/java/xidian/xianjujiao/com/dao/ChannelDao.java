@@ -9,8 +9,10 @@ import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import xidian.xianjujiao.com.db.SQLHelper;
 import xidian.xianjujiao.com.entity.ChannelItem;
@@ -24,7 +26,6 @@ public class ChannelDao implements ChannelDaoInface {
 
 	@Override
 	public boolean addCache(ChannelItem item) {
-		// TODO Auto-generated method stub
 		boolean flag = false;
 		SQLiteDatabase database = null;
 		long id = -1;
@@ -38,7 +39,6 @@ public class ChannelDao implements ChannelDaoInface {
 			id = database.insert(SQLHelper.TABLE_CHANNEL, null, values);
 			flag = (id != -1 ? true : false);
 		} catch (Exception e) {
-			// TODO: handle exception
 		} finally {
 			if (database != null) {
 				database.close();
@@ -49,7 +49,6 @@ public class ChannelDao implements ChannelDaoInface {
 
 	@Override
 	public boolean deleteCache(String whereClause, String[] whereArgs) {
-		// TODO Auto-generated method stub
 		boolean flag = false;
 		SQLiteDatabase database = null;
 		int count = 0;
@@ -58,7 +57,6 @@ public class ChannelDao implements ChannelDaoInface {
 			count = database.delete(SQLHelper.TABLE_CHANNEL, whereClause, whereArgs);
 			flag = (count > 0 ? true : false);
 		} catch (Exception e) {
-			// TODO: handle exception
 		} finally {
 			if (database != null) {
 				database.close();
@@ -70,7 +68,6 @@ public class ChannelDao implements ChannelDaoInface {
 	@Override
 	public boolean updateCache(ContentValues values, String whereClause,
                                String[] whereArgs) {
-		// TODO Auto-generated method stub
 		boolean flag = false;
 		SQLiteDatabase database = null;
 		int count = 0;
@@ -79,7 +76,6 @@ public class ChannelDao implements ChannelDaoInface {
 			count = database.update(SQLHelper.TABLE_CHANNEL, values, whereClause, whereArgs);
 			flag = (count > 0 ? true : false);
 		} catch (Exception e) {
-			// TODO: handle exception
 		} finally {
 			if (database != null) {
 				database.close();
@@ -91,7 +87,6 @@ public class ChannelDao implements ChannelDaoInface {
 	@Override
 	public Map<String, String> viewCache(String selection,
                                          String[] selectionArgs) {
-		// TODO Auto-generated method stub
 		SQLiteDatabase database = null;
 		Cursor cursor = null;
 		Map<String, String> map = new HashMap<String, String>();
@@ -112,7 +107,6 @@ public class ChannelDao implements ChannelDaoInface {
 				}
 			}
 		} catch (Exception e) {
-			// TODO: handle exception
 		} finally {
 			if (database != null) {
 				database.close();
@@ -123,7 +117,6 @@ public class ChannelDao implements ChannelDaoInface {
 
 	@Override
 	public List<Map<String, String>> listCache(String selection, String[] selectionArgs) {
-		// TODO Auto-generated method stub
 		List<Map<String, String>> list = new ArrayList<Map<String, String>>();
 		SQLiteDatabase database = null;
 		Cursor cursor = null;
@@ -147,7 +140,6 @@ public class ChannelDao implements ChannelDaoInface {
 			}
 
 		} catch (Exception e) {
-			// TODO: handle exception
 		} finally {
 			if (database != null) {
 				database.close();
@@ -156,7 +148,32 @@ public class ChannelDao implements ChannelDaoInface {
 		return list;
 	}
 
-	public void clearFeedTable() {
+    @Override
+    public Set<String> getAllChannelId() {
+        Set<String> list = new HashSet<>();
+        SQLiteDatabase database = null;
+        Cursor cursor = null;
+        try {
+            database = helper.getReadableDatabase();
+            cursor = database.query(false, SQLHelper.TABLE_CHANNEL, null, null,null, null, null, null, null);
+            int cols_len = cursor.getColumnCount();
+            while (cursor.moveToNext()) {
+                for (int i = 0; i < cols_len; i++) {
+
+                   list.add(cursor.getString(cursor.getColumnIndex("id")));
+                }
+            }
+
+        } catch (Exception e) {
+        } finally {
+            if (database != null) {
+                database.close();
+            }
+        }
+        return list;
+    }
+
+    public void clearFeedTable() {
 		String sql = "DELETE FROM " + SQLHelper.TABLE_CHANNEL + ";";
 		SQLiteDatabase db = helper.getWritableDatabase();
 		db.execSQL(sql);

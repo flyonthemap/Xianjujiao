@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.res.ConfigurationHelper;
 import android.support.v4.view.ViewCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -97,6 +98,8 @@ public class NewsFragment extends Fragment implements AdapterView.OnItemClickLis
 
     //初始化图片轮播数据
     private void initBanner() {
+
+
         List<ImageCycleView.ImageInfo> list = new ArrayList<>();
         //使用网络加载数据，最后一个参数为图片新闻的id
         list.add(new ImageCycleView.ImageInfo("http://www.3dmgame.com/uploads/allimg/130124/11111111111111111111111111-130124144424.jpg", "新年首款大作 《龙之信条：黑暗觉者》破解版发布", "3542051"));
@@ -144,10 +147,9 @@ public class NewsFragment extends Fragment implements AdapterView.OnItemClickLis
         x.http().get(new RequestParams(stUrl), new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
-
+                Log.e(TAG,result);
                 multiplestatusview.showContent();
-                String json = new String(result);
-                chapterListItems = JsonUtils.parseChapterJson(json);
+                chapterListItems = JsonUtils.parseChapterJson(result);
                 if (page == 1) {
                     data.clear();
                 }

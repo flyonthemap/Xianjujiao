@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
@@ -30,7 +29,7 @@ import xidian.xianjujiao.com.adapter.DragAdapter;
 import xidian.xianjujiao.com.adapter.OtherAdapter;
 import xidian.xianjujiao.com.application.BaseApplication;
 import xidian.xianjujiao.com.entity.ChannelItem;
-import xidian.xianjujiao.com.manager.ChannelManage;
+import xidian.xianjujiao.com.manager.ChannelManager;
 import xidian.xianjujiao.com.view.channelView.DragGrid;
 import xidian.xianjujiao.com.view.channelView.OtherGridView;
 
@@ -39,20 +38,35 @@ import xidian.xianjujiao.com.view.channelView.OtherGridView;
  */
 public class ChannelActivity extends BaseActivity implements OnItemClickListener {
 	public static String TAG = "ChannelActivity";
-	/** 用户栏目的GRIDVIEW */
+	/**
+	 * 用户栏目的GRIDVIEW
+	 */
 	private DragGrid userGridView;
-	/** 其它栏目的GRIDVIEW */
+	/**
+	 * 其它栏目的GRIDVIEW
+	 */
 	private OtherGridView otherGridView;
-	/** 用户栏目对应的适配器，可以拖动 */
+	/**
+	 * 用户栏目对应的适配器，可以拖动
+	 */
 	DragAdapter userAdapter;
-	/** 其它栏目对应的适配器 */
+	/**
+	 * 其它栏目对应的适配器
+	 */
 	OtherAdapter otherAdapter;
-	/** 其它栏目列表 */
+	/**
+	 * 其它栏目列表
+	 */
 	ArrayList<ChannelItem> otherChannelList = new ArrayList<ChannelItem>();
-	/** 用户栏目列表 */
+	/**
+	 * 用户栏目列表
+	 */
 	ArrayList<ChannelItem> userChannelList = new ArrayList<ChannelItem>();
-	/** 是否在移动，由于这边是动画结束后才进行的数据更替，设置这个限制为了避免操作太频繁造成的数据错乱。 */
+	/**
+	 * 是否在移动，由于这边是动画结束后才进行的数据更替，设置这个限制为了避免操作太频繁造成的数据错乱。
+	 */
 	boolean isMove = false;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -61,10 +75,12 @@ public class ChannelActivity extends BaseActivity implements OnItemClickListener
 		initData();
 	}
 
-	/** 初始化数据*/
+	/**
+	 * 初始化数据
+	 */
 	private void initData() {
-		userChannelList = ((ArrayList<ChannelItem>) ChannelManage.getManage(BaseApplication.getApp().getSQLHelper()).getUserChannel());
-		otherChannelList = ((ArrayList<ChannelItem>)ChannelManage.getManage(BaseApplication.getApp().getSQLHelper()).getOtherChannel());
+		userChannelList = ((ArrayList<ChannelItem>) ChannelManager.getChannelManager().getUserChannel());
+		otherChannelList = ((ArrayList<ChannelItem>) ChannelManager.getChannelManager().getOtherChannel());
 		userAdapter = new DragAdapter(this, userChannelList);
 		userGridView.setAdapter(userAdapter);
 		otherAdapter = new OtherAdapter(this, otherChannelList);
@@ -74,19 +90,22 @@ public class ChannelActivity extends BaseActivity implements OnItemClickListener
 		userGridView.setOnItemClickListener(this);
 	}
 
-	/** 初始化布局*/
+	/**
+	 * 初始化布局
+	 */
 	private void initView() {
 		userGridView = (DragGrid) findViewById(R.id.userGridView);
 		otherGridView = (OtherGridView) findViewById(R.id.otherGridView);
 	}
 
 
-
-	/** GRIDVIEW对应的ITEM点击监听接口  */
+	/**
+	 * GRIDVIEW对应的ITEM点击监听接口
+	 */
 	@Override
 	public void onItemClick(AdapterView<?> parent, final View view, final int position, long id) {
 		//如果点击的时候，之前动画还没结束，那么就让点击事件无效
-		if(isMove){
+		if (isMove) {
 			return;
 		}
 		switch (parent.getId()) {
@@ -108,7 +127,7 @@ public class ChannelActivity extends BaseActivity implements OnItemClickListener
 									int[] endLocation = new int[2];
 									//获取终点的坐标
 									otherGridView.getChildAt(otherGridView.getLastVisiblePosition()).getLocationInWindow(endLocation);
-									MoveAnim(moveImageView, startLocation , endLocation, channel,userGridView);
+									MoveAnim(moveImageView, startLocation, endLocation, channel, userGridView);
 									userAdapter.setRemove(position);
 								} catch (Exception localException) {
 								}
@@ -119,7 +138,7 @@ public class ChannelActivity extends BaseActivity implements OnItemClickListener
 				break;
 			case R.id.otherGridView:
 				final ImageView moveImageView = getView(view);
-				if (moveImageView != null){
+				if (moveImageView != null) {
 					TextView newTextView = (TextView) view.findViewById(R.id.text_item);
 					final int[] startLocation = new int[2];
 					newTextView.getLocationInWindow(startLocation);
@@ -133,7 +152,7 @@ public class ChannelActivity extends BaseActivity implements OnItemClickListener
 								int[] endLocation = new int[2];
 								//获取终点的坐标
 								userGridView.getChildAt(userGridView.getLastVisiblePosition()).getLocationInWindow(endLocation);
-								MoveAnim(moveImageView, startLocation , endLocation, channel,otherGridView);
+								MoveAnim(moveImageView, startLocation, endLocation, channel, otherGridView);
 								otherAdapter.setRemove(position);
 							} catch (Exception localException) {
 							}
@@ -145,8 +164,10 @@ public class ChannelActivity extends BaseActivity implements OnItemClickListener
 				break;
 		}
 	}
+
 	/**
 	 * 点击ITEM移动动画
+	 *
 	 * @param moveView
 	 * @param startLocation
 	 * @param endLocation
@@ -154,7 +175,7 @@ public class ChannelActivity extends BaseActivity implements OnItemClickListener
 	 * @param clickGridView
 	 */
 	private void MoveAnim(View moveView, int[] startLocation, int[] endLocation, final ChannelItem moveChannel,
-                          final GridView clickGridView) {
+						  final GridView clickGridView) {
 		int[] initLocation = new int[2];
 		//获取传递过来的VIEW的坐标
 		moveView.getLocationInWindow(initLocation);
@@ -190,7 +211,7 @@ public class ChannelActivity extends BaseActivity implements OnItemClickListener
 					otherAdapter.setVisible(true);
 					otherAdapter.notifyDataSetChanged();
 					userAdapter.remove();
-				}else{
+				} else {
 					userAdapter.setVisible(true);
 					userAdapter.notifyDataSetChanged();
 					otherAdapter.remove();
@@ -202,6 +223,7 @@ public class ChannelActivity extends BaseActivity implements OnItemClickListener
 
 	/**
 	 * 获取移动的VIEW，放入对应ViewGroup布局容器
+	 *
 	 * @param viewGroup
 	 * @param view
 	 * @param initLocation
@@ -231,6 +253,7 @@ public class ChannelActivity extends BaseActivity implements OnItemClickListener
 
 	/**
 	 * 获取点击的Item的对应View，
+	 *
 	 * @param view
 	 * @return
 	 */
@@ -244,24 +267,54 @@ public class ChannelActivity extends BaseActivity implements OnItemClickListener
 		return iv;
 	}
 
-	/** 退出时候保存选择后数据库的设置  */
+	/**
+	 * 退出时候保存选择后数据库的设置
+	 */
 	private void saveChannel() {
-		ChannelManage.getManage(BaseApplication.getApp().getSQLHelper()).deleteAllChannel();
-		ChannelManage.getManage(BaseApplication.getApp().getSQLHelper()).saveUserChannel(userAdapter.getChannnelLst());
-		ChannelManage.getManage(BaseApplication.getApp().getSQLHelper()).saveOtherChannel(otherAdapter.getChannnelLst());
+		ChannelManager.getChannelManager().deleteAllChannel();
+		ChannelManager.getChannelManager().saveUserChannel(userAdapter.getChannnelLst());
+		ChannelManager.getChannelManager().saveOtherChannel(otherAdapter.getChannnelLst());
+	}
+
+//	@Override
+//	public void onBackPressed() {
+//		Log.d("debug", "数据发生改变1");
+//		saveChannel();
+//		if(userAdapter.isListChanged()){
+//			Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+//			setResult(MainActivity.CHANNELRESULT, intent);
+//			finish();
+//			Log.d("debug", "数据发生改变");
+//		}else{
+//			super.onBackPressed();
+//			Log.d("debug", "数据发生改变3");
+//		}
+//		overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+//		Log.d("debug", "数据发生改变2");
+//	}
+
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		saveChannel();
+		if (userAdapter.isListChanged()) {
+			Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+			setResult(MainActivity.CHANNELRESULT, intent);
+			finish();
+			Log.d("debug", "数据发生改变");
+		} else {
+			super.onBackPressed();
+			Log.d("debug", "数据发生改变3");
+
+
+		}
 	}
 
 	@Override
-	public void onBackPressed() {
-		saveChannel();
-		if(userAdapter.isListChanged()){
-			Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-//			setResult(MainActivity.CHANNELRESULT, intent);
-			finish();
-			Log.d(TAG, "数据发生改变");
-		}else{
-			super.onBackPressed();
-		}
-		overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+	protected void onDestroy() {
+
+		super.onDestroy();
+		Log.d("debug","活动已经被销毁");
 	}
 }

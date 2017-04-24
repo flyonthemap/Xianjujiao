@@ -1,6 +1,7 @@
 package xidian.xianjujiao.com.utils;
 
 public class API {
+    public static final String BASE_URL = "http://60.205.179.162/";
     //3DMGame网站地址
     public static final String DMGEAME_URL = "http://www.3dmgame.com";
     //服务器接口地址
@@ -17,5 +18,8 @@ public class API {
     public static final String COMMENT_COMMIT_URL = "http://www.3dmgame.com/sitemap/api.php?type=2";
     //游戏列表获取接口
     public static final String GAME_URL = "http://www.3dmgame.com/sitemap/api.php?row=10&typeid=%s&paging=1&page=%s";
+
+    // 首页模块列表API
+    public static final String CHANNEL_LIST_URL = BASE_URL + "api/toutiao/getModuleList";
 
 }

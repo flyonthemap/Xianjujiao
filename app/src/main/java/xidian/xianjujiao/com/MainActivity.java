@@ -1,10 +1,12 @@
 package xidian.xianjujiao.com;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.WindowManager;
 import android.widget.RadioButton;
@@ -31,7 +33,10 @@ public class MainActivity extends FragmentActivity {
     private TipsToast tipsToast;
     //退出时间
     private long exitTime = 0;
-//    private IFlytekUpdate mUpdManager;
+    //    private IFlytekUpdate mUpdManager;
+    public final static int CHANNELREQUEST = 1;
+    /** 调整返回的RESULTCODE */
+    public final static int CHANNELRESULT = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -208,5 +213,21 @@ public class MainActivity extends FragmentActivity {
     protected void onSaveInstanceState(Bundle outState) {
 //        super.onSaveInstanceState(outState);
         //此处解决有时候出现getActivity（）出现null的情况
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d("debug","收到数据变化" +requestCode +" " +resultCode);
+        switch (requestCode) {
+            case CHANNELREQUEST:
+                if(resultCode == 10){
+//                    setChangelView();
+                    Log.d("debug","收到数据变化");
+                }
+                break;
+
+            default:
+                break;
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

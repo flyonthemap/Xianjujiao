@@ -2,6 +2,7 @@ package xidian.xianjujiao.com.application;
 
 import android.app.Application;
 import android.content.Context;
+import android.os.Handler;
 
 import com.umeng.socialize.PlatformConfig;
 
@@ -17,6 +18,9 @@ import xidian.xianjujiao.com.db.SQLHelper;
 public class BaseApplication extends Application {
     private static BaseApplication mAppApplication;
     private SQLHelper sqlHelper;
+    private static int mainTid;
+    private static Handler mainHandler;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -32,6 +36,8 @@ public class BaseApplication extends Application {
 //        JPushInterface.init(this);
 //        JPushInterface.setDebugMode(true);//设置是否开启log日志，正式打包发布时建议关闭使用
         mAppApplication = this;
+        mainTid = android.os.Process.myTid();
+        mainHandler = new Handler(getMainLooper());
     }
     @Override
     protected void attachBaseContext(Context base) {
@@ -39,7 +45,7 @@ public class BaseApplication extends Application {
 //        MultiDex.install(this);
     }
     /** 获取Application */
-    public static BaseApplication getApp() {
+    public static BaseApplication getApplication() {
         return mAppApplication;
     }
 
@@ -48,6 +54,13 @@ public class BaseApplication extends Application {
         if (sqlHelper == null)
             sqlHelper = new SQLHelper(mAppApplication);
         return sqlHelper;
+    }
+    public static int getMainTid(){
+        return mainTid;
+    }
+    //    获取主线程的handler
+    public static Handler getMainHandler() {
+        return mainHandler;
     }
 
 }

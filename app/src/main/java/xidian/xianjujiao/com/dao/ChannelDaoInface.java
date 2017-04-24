@@ -5,6 +5,7 @@ import android.content.ContentValues;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import xidian.xianjujiao.com.entity.ChannelItem;
 
@@ -21,6 +22,7 @@ public interface ChannelDaoInface {
 
 	public List<Map<String, String>> listCache(String selection,
                                                String[] selectionArgs);
+	public Set<String> getAllChannelId();
 
 	public void clearFeedTable();
 }

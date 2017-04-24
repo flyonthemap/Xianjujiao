@@ -34,7 +34,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.ChannelActivity" >
+        <activity
+            android:name=".activity.ChannelActivity"
+            android:launchMode="singleTask">
         </activity>
         <!--极光推送相关配置  start-->
         <service

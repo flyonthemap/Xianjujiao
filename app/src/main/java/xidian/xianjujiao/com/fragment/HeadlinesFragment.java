@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,14 +13,25 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import com.viewpagerindicator.TabPageIndicator;
 
+import org.xutils.common.Callback;
+import org.xutils.http.RequestParams;
+import org.xutils.x;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import xidian.xianjujiao.com.MainActivity;
 import xidian.xianjujiao.com.R;
 import xidian.xianjujiao.com.activity.ChannelActivity;
 import xidian.xianjujiao.com.adapter.TabPageIndicatorAdapter;
+import xidian.xianjujiao.com.db.SQLHelper;
 import xidian.xianjujiao.com.fragment.innerFragments.CommondFragment;
 import xidian.xianjujiao.com.fragment.innerFragments.NewsFragment;
+import xidian.xianjujiao.com.manager.ChannelManager;
+import xidian.xianjujiao.com.utils.API;
+import xidian.xianjujiao.com.utils.JsonUtils;
+import xidian.xianjujiao.com.utils.NetUtils;
+import xidian.xianjujiao.com.utils.UiUtils;
 
 /**
  * 文章的Fragment
@@ -42,7 +54,6 @@ public class HeadlinesFragment extends Fragment {
     private ImageButton main_action_menu;
     private ImageButton ibSearch;
     private ImageButton ibMoreChannel;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -71,7 +82,28 @@ public class HeadlinesFragment extends Fragment {
 
     //初始化数据
     private void initData() {
+        x.http().get(new RequestParams(API.CHANNEL_LIST_URL), new Callback.CommonCallback<String>() {
+            @Override
+            public void onSuccess(String result) {
+                JsonUtils.parseChannelJson(result);
 
+            }
+
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+
+            }
+
+            @Override
+            public void onCancelled(CancelledException cex) {
+
+            }
+
+            @Override
+            public void onFinished() {
+
+            }
+        });
         NewsFragment newsFragment = new NewsFragment();//新闻
         fragments.add(newsFragment);
         //循环创建7个子fragment
@@ -115,8 +147,8 @@ public class HeadlinesFragment extends Fragment {
         ibMoreChannel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), ChannelActivity.class);
-                startActivity(intent);
+                Intent intent = new Intent(UiUtils.getContext(), ChannelActivity.class);
+                getActivity().startActivityForResult(intent, MainActivity.CHANNELREQUEST);
             }
         });
     }

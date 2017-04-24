@@ -1,17 +1,22 @@
 package xidian.xianjujiao.com.utils;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 
-
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import xidian.xianjujiao.com.entity.ChannelItem;
 import xidian.xianjujiao.com.entity.ChapterListItem;
 import xidian.xianjujiao.com.entity.GameListItem;
+import xidian.xianjujiao.com.manager.ChannelManager;
 
 /**
  * Created by xhb on 2016/1/19
@@ -142,8 +147,59 @@ public class JsonUtils {
         return list;
     }
 
+
+    public static void parseChannelJson(String json){
+        ChannelManager channelManager = ChannelManager.getChannelManager();
+        List<ChannelItem> defaultChannel = new ArrayList<>();
+        List<ChannelItem> otherChannel = new ArrayList<>();
+        // 使用hashSet来确定是否要更新数据库的数据
+        Set<String> allChannelId = new HashSet<>();
+        try {
+            JSONObject jsonObject = new JSONObject(json);
+            JSONArray defaultJson = jsonObject.getJSONArray("default");
+            JSONObject itemJson = null;
+            int count = 0;
+            for(int i =0;i<defaultJson.length();++i){
+                itemJson = defaultJson.getJSONObject(i);
+                ChannelItem channelItem = new ChannelItem();
+                channelItem.setId(itemJson.getString("module_id"));
+                channelItem.setName(itemJson.getString("module_name"));
+                channelItem.setOrderId(++count);
+                channelItem.setSelected(1);
+                defaultChannel.add(channelItem);
+                allChannelId.add(channelItem.getId());
+
+            }
+            JSONArray otherJson = jsonObject.getJSONArray("other");
+            for(int i =0;i<otherJson.length();++i){
+                itemJson = otherJson.getJSONObject(i);
+                ChannelItem channelItem = new ChannelItem();
+                channelItem.setId(itemJson.getString("module_id"));
+                channelItem.setName(itemJson.getString("module_name"));
+                channelItem.setOrderId(++count);
+                channelItem.setSelected(0);
+                otherChannel.add(channelItem);
+                allChannelId.add(channelItem.getId());
+                Log.e("debug",channelItem.toString());
+
+
+            }
+
+            Log.e("debug",itemJson.toString());
+            if(!allChannelId.equals(channelManager.getAllChannelId())){
+                Log.e("debug","no equals.....");
+                channelManager.setDefaultUserChannels(defaultChannel);
+                channelManager.setDefaultOtherChannels(otherChannel);
+            }else{
+                Log.e("debug","equals.....");
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
     /**
-     * 异常信息：org.json.JSONException: Value ﻿ of type java.lang.String cannot be converted to JSONObject
+     * 异常信息：org.json.JSONException: Value﻿ of type java.lang.String cannot be converted to JSONObject
      * json串头部出现字符："\ufeff" 解决方法
      * @param data
      * @return

@@ -8,49 +8,60 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import xidian.xianjujiao.com.application.BaseApplication;
 import xidian.xianjujiao.com.dao.ChannelDao;
 import xidian.xianjujiao.com.db.SQLHelper;
 import xidian.xianjujiao.com.entity.ChannelItem;
 
-public class ChannelManage {
-	public static ChannelManage channelManage;
-	/**
-	 * 默认的用户选择频道列表
-	 * */
+public class ChannelManager {
+	public static ChannelManager channelManager;
+	// 默认用户选择频道
 	public static List<ChannelItem> defaultUserChannels;
-	/**
-	 * 默认的其他频道列表
-	 * */
+	// 默认其他频道
 	public static List<ChannelItem> defaultOtherChannels;
+	// 所有频道
+	public static List<ChannelItem> allChannels;
+	// 所有频道的Id
+	public static List<ChannelItem> getAllChannels() {
+		return allChannels;
+	}
+
+	public static void setAllChannels(List<ChannelItem> allChannels) {
+		ChannelManager.allChannels = allChannels;
+	}
+
 	private ChannelDao channelDao;
-	/** 判断数据库中是否存在用户数据 */
+	private static SQLHelper dbHelper;
+	// 判断数据库中是否存在数据
 	private boolean userExist = false;
 	static {
 		defaultUserChannels = new ArrayList<ChannelItem>();
 		defaultOtherChannels = new ArrayList<ChannelItem>();
-		defaultUserChannels.add(new ChannelItem(1, "推荐", 1, 1));
-		defaultUserChannels.add(new ChannelItem(2, "热点", 2, 1));
-		defaultUserChannels.add(new ChannelItem(3, "杭州", 3, 1));
-		defaultUserChannels.add(new ChannelItem(4, "时尚", 4, 1));
-		defaultUserChannels.add(new ChannelItem(5, "科技", 5, 1));
-		defaultUserChannels.add(new ChannelItem(6, "体育", 6, 1));
-		defaultUserChannels.add(new ChannelItem(7, "军事", 7, 1));
-		defaultOtherChannels.add(new ChannelItem(8, "财经", 1, 0));
-		defaultOtherChannels.add(new ChannelItem(9, "汽车", 2, 0));
-		defaultOtherChannels.add(new ChannelItem(10, "房产", 3, 0));
-		defaultOtherChannels.add(new ChannelItem(11, "社会", 4, 0));
-		defaultOtherChannels.add(new ChannelItem(12, "情感", 5, 0));
-		defaultOtherChannels.add(new ChannelItem(13, "女人", 6, 0));
-		defaultOtherChannels.add(new ChannelItem(14, "旅游", 7, 0));
-		defaultOtherChannels.add(new ChannelItem(15, "健康", 8, 0));
-		defaultOtherChannels.add(new ChannelItem(16, "美女", 9, 0));
-		defaultOtherChannels.add(new ChannelItem(17, "游戏", 10, 0));
-		defaultOtherChannels.add(new ChannelItem(18, "数码", 11, 0));
-		defaultUserChannels.add(new ChannelItem(19, "娱乐", 12, 0));
+//		defaultUserChannels.add(new ChannelItem(1, "推荐", 1, 1));
+//		defaultUserChannels.add(new ChannelItem(2, "热点", 2, 1));
+//		defaultUserChannels.add(new ChannelItem(3, "杭州", 3, 1));
+//		defaultUserChannels.add(new ChannelItem(4, "时尚", 4, 1));
+//		defaultUserChannels.add(new ChannelItem(5, "科技", 5, 1));
+//		defaultUserChannels.add(new ChannelItem(6, "体育", 6, 1));
+//		defaultUserChannels.add(new ChannelItem(7, "军事", 7, 1));
+//
+//		defaultOtherChannels.add(new ChannelItem(8, "财经", 1, 0));
+//		defaultOtherChannels.add(new ChannelItem(9, "汽车", 2, 0));
+//		defaultOtherChannels.add(new ChannelItem(10, "房产", 3, 0));
+//		defaultOtherChannels.add(new ChannelItem(11, "社会", 4, 0));
+//		defaultOtherChannels.add(new ChannelItem(12, "情感", 5, 0));
+//		defaultOtherChannels.add(new ChannelItem(13, "女人", 6, 0));
+//		defaultOtherChannels.add(new ChannelItem(14, "旅游", 7, 0));
+//		defaultOtherChannels.add(new ChannelItem(15, "健康", 8, 0));
+//		defaultOtherChannels.add(new ChannelItem(16, "美女", 9, 0));
+//		defaultOtherChannels.add(new ChannelItem(17, "游戏", 10, 0));
+//		defaultOtherChannels.add(new ChannelItem(18, "数码", 11, 0));
+//		defaultUserChannels.add(new ChannelItem(19, "娱乐", 12, 0));
 	}
 
-	private ChannelManage(SQLHelper paramDBHelper) throws SQLException {
+	private ChannelManager(SQLHelper paramDBHelper) throws SQLException {
 		if (channelDao == null)
 			channelDao = new ChannelDao(paramDBHelper.getContext());
 		// NavigateItemDao(paramDBHelper.getDao(NavigateItem.class));
@@ -59,13 +70,13 @@ public class ChannelManage {
 
 	/**
 	 * 初始化频道管理类
-	 * @param paramDBHelper
 	 * @throws SQLException
 	 */
-	public static ChannelManage getManage(SQLHelper dbHelper)throws SQLException {
-		if (channelManage == null)
-			channelManage = new ChannelManage(dbHelper);
-		return channelManage;
+	public static ChannelManager getChannelManager()throws SQLException {
+		dbHelper = BaseApplication.getApplication().getSQLHelper();
+		if (channelManager == null)
+			channelManager = new ChannelManager(dbHelper);
+		return channelManager;
 	}
 
 	/**
@@ -87,7 +98,7 @@ public class ChannelManage {
 			List<ChannelItem> list = new ArrayList<ChannelItem>();
 			for (int i = 0; i < count; i++) {
 				ChannelItem navigate = new ChannelItem();
-				navigate.setId(Integer.valueOf(maplist.get(i).get(SQLHelper.ID)));
+				navigate.setId(maplist.get(i).get(SQLHelper.ID));
 				navigate.setName(maplist.get(i).get(SQLHelper.NAME));
 				navigate.setOrderId(Integer.valueOf(maplist.get(i).get(SQLHelper.ORDERID)));
 				navigate.setSelected(Integer.valueOf(maplist.get(i).get(SQLHelper.SELECTED)));
@@ -111,7 +122,7 @@ public class ChannelManage {
 			int count = maplist.size();
 			for (int i = 0; i < count; i++) {
 				ChannelItem navigate= new ChannelItem();
-				navigate.setId(Integer.valueOf(maplist.get(i).get(SQLHelper.ID)));
+				navigate.setId(maplist.get(i).get(SQLHelper.ID));
 				navigate.setName(maplist.get(i).get(SQLHelper.NAME));
 				navigate.setOrderId(Integer.valueOf(maplist.get(i).get(SQLHelper.ORDERID)));
 				navigate.setSelected(Integer.valueOf(maplist.get(i).get(SQLHelper.SELECTED)));
@@ -160,5 +171,22 @@ public class ChannelManage {
 		deleteAllChannel();
 		saveUserChannel(defaultUserChannels);
 		saveOtherChannel(defaultOtherChannels);
+	}
+	public Set<String> getAllChannelId(){
+		return channelDao.getAllChannelId();
+	}
+	public static List<ChannelItem> getDefaultUserChannels(){
+		return defaultUserChannels;
+	}
+	public static List<ChannelItem> getDefaultOtherChannels(){
+		return defaultOtherChannels;
+	}
+
+	public static void setDefaultOtherChannels(List<ChannelItem> defaultOtherChannels) {
+		ChannelManager.defaultOtherChannels = defaultOtherChannels;
+	}
+
+	public static void setDefaultUserChannels(List<ChannelItem> defaultUserChannels) {
+		ChannelManager.defaultUserChannels = defaultUserChannels;
 	}
 }

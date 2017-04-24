@@ -106,7 +106,6 @@ public class DragGrid extends GridView {
 
 	@Override
 	public boolean onInterceptTouchEvent(MotionEvent ev) {
-		// TODO Auto-generated method stub
 		if (ev.getAction() == MotionEvent.ACTION_DOWN) {
 			downX = (int) ev.getX();
 			downY = (int) ev.getY();
@@ -119,7 +118,6 @@ public class DragGrid extends GridView {
 
 	@Override
 	public boolean onTouchEvent(MotionEvent ev) {
-		// TODO Auto-generated method stub
 		boolean bool = true;
 		if (dragImageView != null && dragPosition != AdapterView.INVALID_POSITION) {
 			// 移动时候的对应x,y位置
