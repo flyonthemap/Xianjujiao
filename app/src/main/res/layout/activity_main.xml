@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="xidian.xianjujiao.com.xianjujiao.MainActivity">
+    tools:context="xidian.xianjujiao.com.MainActivity">
 
     <android.support.v4.view.ViewPager
         android:id="@+id/main_viewpager"
@@ -31,7 +31,7 @@
             android:drawableTop="@drawable/menu1_drawable_selector"
             android:gravity="center"
             android:padding="8dp"
-            android:text="文章"
+            android:text="头条"
             android:textColor="@drawable/menu_color_selector"
             android:textSize="15sp" />
 
@@ -43,7 +43,7 @@
             android:drawableTop="@drawable/menu2_drawable_selector"
             android:gravity="center"
             android:padding="8dp"
-            android:text="视频"
+            android:text="聚焦"
             android:textColor="@drawable/menu_color_selector"
             android:textSize="15sp" />
 
@@ -55,7 +55,7 @@
             android:drawableTop="@drawable/menu3_drawable_selector"
             android:gravity="center"
             android:padding="8dp"
-            android:text="论坛"
+            android:text="直播"
             android:textColor="@drawable/menu_color_selector"
             android:textSize="15sp" />
 
@@ -67,7 +67,7 @@
             android:drawableTop="@drawable/menu4_drawable_selector"
             android:gravity="center"
             android:padding="8dp"
-            android:text="游戏"
+            android:text="我"
             android:textColor="@drawable/menu_color_selector"
             android:textSize="15sp" />
     </RadioGroup>
