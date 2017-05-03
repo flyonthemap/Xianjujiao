@@ -9,19 +9,20 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <in.srain.cube.views.ptr.PtrClassicFrameLayout
-            android:id="@+id/ptr_layout"
+        <com.classic.common.MultipleStatusView
+            android:id="@+id/multiplestatusview"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <com.classic.common.MultipleStatusView
-                android:id="@+id/multiplestatusview"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            app:emptyView="@layout/custom_empty_view"
+            app:errorView="@layout/custom_error_view"
+            app:loadingView="@layout/custom_loading_view"
+            app:noNetworkView="@layout/custom_no_network_view">
+            <xidian.xianjujiao.com.view.CustomRefresh
+                android:id="@+id/srl_refresh"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                app:emptyView="@layout/custom_empty_view"
-                app:errorView="@layout/custom_error_view"
-                app:loadingView="@layout/custom_loading_view"
-                app:noNetworkView="@layout/custom_no_network_view">
+                android:layout_height="match_parent">
+
                 <ListView
                     android:id="@+id/content_view"
                     android:layout_width="match_parent"
@@ -29,7 +30,8 @@
                     android:scrollbars="none"
                     android:divider="@null"
                     android:focusable="false"/>
-            </com.classic.common.MultipleStatusView>
-        </in.srain.cube.views.ptr.PtrClassicFrameLayout>
+
+            </xidian.xianjujiao.com.view.CustomRefresh>
+        </com.classic.common.MultipleStatusView>
     </FrameLayout>
 </LinearLayout>

@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,8 +30,6 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import in.srain.cube.views.ptr.PtrClassicFrameLayout;
-import in.srain.cube.views.ptr.PtrHandler;
 import xidian.xianjujiao.com.R;
 import xidian.xianjujiao.com.activity.VideoNewsDetailActivity;
 import xidian.xianjujiao.com.adapter.HeadLinesHeaderAdapter;
@@ -51,8 +50,8 @@ import xidian.xianjujiao.com.utils.UiUtils;
 public class NewsFragment extends Fragment implements AdapterView.OnItemClickListener, AbsListView.OnScrollListener {
     @Bind(R.id.multiplestatusview)
     MultipleStatusView multiplestatusview;
-    @Bind(R.id.ptr_layout)
-    PtrClassicFrameLayout ptrLayout;
+    @Bind(R.id.srl_refresh)
+    SwipeRefreshLayout refreshLayout;
     TextView tvTitle;// 头条新闻的标题
 
     CirclePageIndicator mIndicator;// 头条新闻位置指示器
@@ -63,6 +62,7 @@ public class NewsFragment extends Fragment implements AdapterView.OnItemClickLis
     private View mHeadView;
     private static Handler mHandler;
     private View mFootView;
+
     // 保存全部的条目数据
     private List<NewsData.NewItem> newsItemList = new ArrayList<>();
     //Android自带下拉刷新控件
@@ -74,12 +74,16 @@ public class NewsFragment extends Fragment implements AdapterView.OnItemClickLis
 
     private HeadLinesHeaderAdapter topNewsAdapter;
     private List<ListHeaderData.Shuffling> mTopNewsList;
+    private boolean isFirst = true;
+    // 避免页数无限度增加
+    private boolean hasMore = true;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_news, container, false);
         ButterKnife.bind(this, view);
+
         initView();
         setAdapter();
         setListener();
@@ -193,7 +197,7 @@ public class NewsFragment extends Fragment implements AdapterView.OnItemClickLis
                     multiplestatusview.showEmpty();
                 }
                 newsItemList.addAll(newNewsData);
-                ptrLayout.refreshComplete();
+                refreshLayout.setRefreshing(false);
             }
 
             @Override
@@ -214,7 +218,7 @@ public class NewsFragment extends Fragment implements AdapterView.OnItemClickLis
             public void onFinished() {
 
                 if (page == 1) {
-                    ptrLayout.refreshComplete();
+                    refreshLayout.setRefreshing(false);
                 }
                 adapter.notifyDataSetChanged();
             }
@@ -237,6 +241,8 @@ public class NewsFragment extends Fragment implements AdapterView.OnItemClickLis
             @Override
             public void onClick(View v) {
                 Log.e(Constant.DEBUG,"下载方法被调用了1");
+                hasMore = true;
+                isFirst = true;
                 requestNewsFromSever(1);
             }
         });
@@ -274,7 +280,8 @@ public class NewsFragment extends Fragment implements AdapterView.OnItemClickLis
         //isBottom是自定义的boolean变量，用于标记是否滑动到底部
         if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE && isBottom && !isLoadData) {
             //如果加载到底部则加载下一页的数据显示到listview中
-          loadMoreData();
+            if(hasMore)
+                loadMoreData();
 
         }
     }
@@ -303,6 +310,7 @@ public class NewsFragment extends Fragment implements AdapterView.OnItemClickLis
                         mFootView = UiUtils.inflate(R.layout.listview_footer_no_more);
                         news_lv.addFooterView(mFootView, null, false);
                         isLoadData = false;
+                        hasMore = false;
                     }
                 }
 
@@ -337,19 +345,20 @@ public class NewsFragment extends Fragment implements AdapterView.OnItemClickLis
         ButterKnife.unbind(this);
     }
     private void setSwipeRefreshInfo() {
-        ptrLayout.setPtrHandler(new PtrHandler() {
+        if(isFirst){
+            requestNewsFromSever(1);
+            isFirst = false;
+        }
+        refreshLayout.setColorSchemeResources(R.color.blue, R.color.green, R.color.orange);
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
-            public boolean checkCanDoRefresh(in.srain.cube.views.ptr.PtrFrameLayout frame, View content, View header) {
-                return !canChildScrollUp();
-            }
-
-            @Override
-            public void onRefreshBegin(in.srain.cube.views.ptr.PtrFrameLayout frame) {
+            public void onRefresh() {
+                currentPage = 1;
+                hasMore = true;
                 requestNewsFromSever(1);
             }
         });
-        ptrLayout.setLastUpdateTimeRelateObject(this);//设置是否显示上次更新时间
-        ptrLayout.autoRefresh();//设置是否自动更新
+
     }
 
     /**

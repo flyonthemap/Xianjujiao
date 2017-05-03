@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.classic.common.MultipleStatusView;
 import com.google.gson.Gson;
 
 import org.xutils.common.Callback;
@@ -24,6 +26,7 @@ import org.xutils.x;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
 import xidian.xianjujiao.com.R;
 import xidian.xianjujiao.com.adapter.FocusHorizontalAdapter;
@@ -46,9 +49,10 @@ public class FocusFragment extends Fragment implements AdapterView.OnItemClickLi
 
 
     private View view;
-//    @Bind(R.id.msv_focus)
-//    MultipleStatusView multiplestatusview;
-    // ListView header
+    @Bind(R.id.focus_msv)
+    MultipleStatusView multiplestatusview;
+    @Bind(R.id.focus_srl_refresh)
+    SwipeRefreshLayout swipeRefreshLayout;
     private List<FocusHeaderData.FocusShuffling> focusShufflingList;
     private HorizontalListView horizontalListView;
     private FocusViewPagerAdapter focusViewPagerAdapter;
@@ -72,6 +76,11 @@ public class FocusFragment extends Fragment implements AdapterView.OnItemClickLi
     //
     private FocusHeaderData.FocusShuffling focusShuffling;
 
+    // 是否是第一次加载
+    private boolean isFirst = true;
+    // 是否有更多数据
+    private boolean hasMore = true;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -79,12 +88,12 @@ public class FocusFragment extends Fragment implements AdapterView.OnItemClickLi
         ButterKnife.bind(this, view);
         initView();
         setListener();
-//        setSwipeRefreshInfo();
+        setSwipeRefreshInfo();
         return view;
     }
 
     private void initView() {
-        lvFocus = (ListView) view.findViewById(R.id.lv_focus);
+        lvFocus = (ListView) view.findViewById(R.id.content_view);
         headerView = UiUtils.inflate(R.layout.focus_listview_header_view);
         lvFocus.addHeaderView(headerView);
         horizontalListView  = (HorizontalListView) headerView.findViewById(R.id.hlv_overview);
@@ -102,10 +111,11 @@ public class FocusFragment extends Fragment implements AdapterView.OnItemClickLi
 
     //初始化图片轮播数据
     private void initBanner() {
-        requestNewsFromSever(1);
+        multiplestatusview.showLoading();
         x.http().get(new RequestParams(API.FOCUS_SHUFFLING_URL), new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
+                multiplestatusview.showContent();
                 Gson gson = new Gson();
                 FocusHeaderData focusHeaderData = gson.fromJson(result,FocusHeaderData.class);
                 focusShufflingList = focusHeaderData.list;
@@ -121,6 +131,11 @@ public class FocusFragment extends Fragment implements AdapterView.OnItemClickLi
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
+                if (NetUtils.isNetConnected(getActivity())){
+                    multiplestatusview.showError();
+                }else {
+                    multiplestatusview.showNoNetwork();
+                }
             }
 
             @Override
@@ -153,18 +168,19 @@ public class FocusFragment extends Fragment implements AdapterView.OnItemClickLi
 
     private void requestNewsFromSever(final int page) {
 
-//        multiplestatusview.showLoading();
         //使用xutils请求网络数据
         String newsUrl = String.format(API.FOCUS_NEWS_URL,page);
         x.http().get(new RequestParams(newsUrl), new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
-//                multiplestatusview.showContent();
+
                 focusNewsData = JsonUtils.parseFocusNewsData(result);
                 newFocusNewsList = focusNewsData.news;
                 if (page == 1) {
                     allFocusNewsList.clear();
                 }
+                if(newFocusNewsList.isEmpty())
+                    multiplestatusview.showEmpty();
                 allFocusNewsList.addAll(newFocusNewsList);
                 tvFocusModule.setText(focusNewsData.module_name);
 //                ptrLayout.refreshComplete();
@@ -172,11 +188,7 @@ public class FocusFragment extends Fragment implements AdapterView.OnItemClickLi
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
-                if (NetUtils.isNetConnected(getActivity())){
-//                    multiplestatusview.showError();
-                }else {
-//                    multiplestatusview.showNoNetwork();
-                }
+
             }
 
             @Override
@@ -187,41 +199,22 @@ public class FocusFragment extends Fragment implements AdapterView.OnItemClickLi
             @Override
             public void onFinished() {
 
-
+                if(page == 1){
+                    swipeRefreshLayout.setRefreshing(false);
+                }
                 focusNewsAdapter.notifyDataSetChanged();
             }
         });
     }
-    /**
-     * 判断是否滑动到顶端
-     * @return
-     */
-    private boolean canChildScrollUp() {
-        if (android.os.Build.VERSION.SDK_INT < 14) {
-            if (lvFocus instanceof AbsListView) {
-                final AbsListView absListView = (AbsListView) lvFocus;
-                return absListView.getChildCount() > 0 &&
-                        (absListView.getFirstVisiblePosition() > 0 ||
-                                absListView.getChildAt(0).getTop() < absListView.getPaddingTop());
 
-            } else {
-                return ViewCompat.canScrollVertically(lvFocus, -1) || lvFocus.getScrollY() > 0;
-            }
-
-            } else {
-
-                return ViewCompat.canScrollVertically(lvFocus, -1);
-
-            }
-
-    }
     //////////////////////listview的滑动事件监听/////////////////
     @Override
     public void onScrollStateChanged(AbsListView view, int scrollState) {
         //isBottom是自定义的boolean变量，用于标记是否滑动到底部
         if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE && isBottom && !isLoadData) {
             //如果加载到底部则加载下一页的数据显示到listview中
-            loadMoreData();
+            if(hasMore)
+                loadMoreData();
 
         }
     }
@@ -252,6 +245,7 @@ public class FocusFragment extends Fragment implements AdapterView.OnItemClickLi
                         mFootView = UiUtils.inflate(R.layout.listview_footer_no_more);
                         lvFocus.addFooterView(mFootView, null, false);
                         isLoadData = false;
+                        hasMore = false;
                     }
                 }
 
@@ -282,6 +276,23 @@ public class FocusFragment extends Fragment implements AdapterView.OnItemClickLi
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+    }
+    private void setSwipeRefreshInfo() {
+        if(isFirst){
+            requestNewsFromSever(1);
+            isFirst = false;
+        }
+        swipeRefreshLayout.setColorSchemeResources(R.color.blue, R.color.green, R.color.orange);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                currentPage = 1;
+                hasMore = true;
+                requestNewsFromSever(1);
+                initBanner();
+            }
+        });
 
     }
 }

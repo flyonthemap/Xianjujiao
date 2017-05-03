@@ -11,7 +11,7 @@
 
         <View
             android:id="@+id/view_left"
-            android:layout_width="8dp"
+            android:layout_width="7dp"
             android:layout_height="match_parent"
             android:layout_alignParentLeft="true"
             android:background="@color/grey700">
@@ -25,7 +25,7 @@
             android:layout_marginLeft="10dp"
             android:textColor="@color/text_black"
             android:maxLines="1"
-            android:textSize="18sp"
+            android:textSize="16sp"
             android:ellipsize="end" />
         <View
             android:layout_width="8dp"

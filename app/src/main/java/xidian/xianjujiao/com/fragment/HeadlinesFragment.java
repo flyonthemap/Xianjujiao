@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,12 +14,16 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.classic.common.MultipleStatusView;
+
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
 
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import xidian.xianjujiao.com.R;
 import xidian.xianjujiao.com.activity.ChannelActivity;
 import xidian.xianjujiao.com.activity.SearchActivity;
@@ -28,6 +33,7 @@ import xidian.xianjujiao.com.fragment.innerFragments.NewsFragment;
 import xidian.xianjujiao.com.manager.ChannelManager;
 import xidian.xianjujiao.com.utils.API;
 import xidian.xianjujiao.com.utils.JsonUtils;
+import xidian.xianjujiao.com.utils.NetUtils;
 import xidian.xianjujiao.com.utils.UiUtils;
 
 /**
@@ -35,6 +41,10 @@ import xidian.xianjujiao.com.utils.UiUtils;
  */
 public class HeadlinesFragment extends Fragment {
 
+    @Bind(R.id.headline_msv)
+    MultipleStatusView multiplestatusview;
+    @Bind(R.id.headline_tabs)
+    TabLayout tabLayout;
     public final static int CHANNELREQUEST = 1;
 
 
@@ -42,7 +52,6 @@ public class HeadlinesFragment extends Fragment {
     private TextView tv_title;
     private ImageButton ibSearch;
     private ImageButton ibMoreChannel;
-    private TabLayout tabLayout;
     // channelId的集合
     private List<ChannelItem> channelItemList;
     private LiveFragmentPagerAdapter pagerAdapter;
@@ -50,6 +59,7 @@ public class HeadlinesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_headlines, container, false);
+        ButterKnife.bind(this, view);
         initData();
         initView(view);
         setAdapter();
@@ -65,7 +75,6 @@ public class HeadlinesFragment extends Fragment {
         tv_title = (TextView) view.findViewById(R.id.title);
         tv_title.setText("西安聚焦");
         vp_headline = (ViewPager) view.findViewById(R.id.vp_headline);
-        tabLayout = (TabLayout) view.findViewById(R.id.headline_tabs);
 
         ibMoreChannel = (ImageButton) view.findViewById(R.id.btn_more_channel);
 
@@ -73,15 +82,22 @@ public class HeadlinesFragment extends Fragment {
 
     //初始化数据
     private void initData() {
-
+        multiplestatusview.showLoading();
         x.http().get(new RequestParams(API.CHANNEL_LIST_URL), new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
+                multiplestatusview.showContent();
                 JsonUtils.parseChannelJson(result);
+
             }
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
+                if (NetUtils.isNetConnected(getActivity())){
+                    multiplestatusview.showError();
+                }else {
+                    multiplestatusview.showNoNetwork();
+                }
 
             }
 
@@ -96,6 +112,7 @@ public class HeadlinesFragment extends Fragment {
                 for (int i = 0; i < channelItemList.size(); i++) {
                     addPage(channelItemList.get(i));
                 }
+
             }
         });
 

@@ -7,15 +7,34 @@
     <!-- 标题 -->
     <include layout="@layout/title_layout"></include>
 
-
-    <ListView
-        android:id="@+id/lv_focus"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:scrollbars="none"
-        android:divider="@null"
-        android:focusable="false" />
+        android:layout_height="match_parent">
+        <com.classic.common.MultipleStatusView
+            android:id="@+id/focus_msv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            app:emptyView="@layout/custom_empty_view"
+            app:errorView="@layout/custom_error_view"
+            app:loadingView="@layout/custom_loading_view"
+            app:noNetworkView="@layout/custom_no_network_view">
+            <xidian.xianjujiao.com.view.CustomRefresh
+                android:id="@+id/focus_srl_refresh"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
+                <ListView
+                    android:id="@+id/content_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:scrollbars="none"
+                    android:divider="@null"
+                    android:focusable="false"/>
+
+            </xidian.xianjujiao.com.view.CustomRefresh>
+        </com.classic.common.MultipleStatusView>
+    </FrameLayout>
 
 
 

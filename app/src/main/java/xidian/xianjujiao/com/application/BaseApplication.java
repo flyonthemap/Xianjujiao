@@ -3,6 +3,7 @@ package xidian.xianjujiao.com.application;
 import android.app.Application;
 import android.content.Context;
 import android.os.Handler;
+import android.util.DisplayMetrics;
 
 import com.umeng.socialize.PlatformConfig;
 
@@ -20,7 +21,6 @@ public class BaseApplication extends Application {
     private SQLHelper sqlHelper;
     private static int mainTid;
     private static Handler mainHandler;
-
     @Override
     public void onCreate() {
         super.onCreate();
@@ -61,6 +61,9 @@ public class BaseApplication extends Application {
     //    获取主线程的handler
     public static Handler getMainHandler() {
         return mainHandler;
+    }
+    public void getScreen(Context aty) {
+
     }
 
 }

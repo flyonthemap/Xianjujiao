@@ -39,6 +39,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.EdgeEffectCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -250,7 +251,9 @@ public class HorizontalListView extends AdapterView<ListAdapter> {
 
             while (view.getParent() instanceof View) {
                 // If the parent is a ListView or ScrollView then disallow intercepting of touch events
-                if (view.getParent() instanceof ListView || view.getParent() instanceof ScrollView || view.getParent() instanceof PtrClassicFrameLayout) {
+                // 拦截父控件的TouchEvent来避免滑动冲突
+                if (view.getParent() instanceof ListView || view.getParent() instanceof ScrollView
+                        || view.getParent() instanceof SwipeRefreshLayout) {
                     view.getParent().requestDisallowInterceptTouchEvent(disallowIntercept);
                     mIsParentVerticiallyScrollableViewDisallowingInterceptTouchEvent = disallowIntercept;
                     Log.e(Constant.DEBUG,"滑动冲突被拦截");

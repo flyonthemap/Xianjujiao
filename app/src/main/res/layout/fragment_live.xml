@@ -11,20 +11,38 @@
 
     </include>
 
-    <android.support.design.widget.TabLayout
-        android:id="@+id/live_tabs"
+    <com.classic.common.MultipleStatusView
+        android:id="@+id/live_msv"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/tablayoyt_background"
-        app:tabSelectedTextColor="@color/tablayout_text_selected"
-        app:tabTextColor="@color/tablayout_text_color"
-        app:tabIndicatorHeight="0dp"
-        />
-    <android.support.v4.view.ViewPager
-        android:id="@+id/live_viewpager"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:background="@android:color/white" />
+        android:layout_height="match_parent"
+        android:gravity="center"
+        app:emptyView="@layout/custom_empty_view"
+        app:errorView="@layout/custom_error_view"
+        app:loadingView="@layout/custom_loading_view"
+        app:noNetworkView="@layout/custom_no_network_view">
+
+            <LinearLayout
+                android:id="@+id/content_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+                <android.support.design.widget.TabLayout
+                    android:id="@+id/live_tabs"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/tablayoyt_background"
+                    app:tabSelectedTextColor="@color/tablayout_text_selected"
+                    app:tabTextColor="@color/tablayout_text_color"
+                    app:tabIndicatorHeight="0dp"
+                    />
+                <android.support.v4.view.ViewPager
+                    android:id="@+id/live_viewpager"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:background="@android:color/white" />
+            </LinearLayout>
+
+    </com.classic.common.MultipleStatusView>
 
 </LinearLayout>

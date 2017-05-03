@@ -55,4 +55,7 @@
     <color name="tablayout_text">#ffcdcdcd</color>
     <color name="tab_indicator">#4876FF</color>
     <color name="tab_headline_background">#fff</color>
+    <color name="orange">#FF9900</color>
+    <color name="green">#009900</color>
+    <color name="blue">#000099</color>
 </resources>
