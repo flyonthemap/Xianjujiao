@@ -19,6 +19,7 @@ import java.util.List;
 import xidian.xianjujiao.com.R;
 import xidian.xianjujiao.com.adapter.TabPageIndicatorAdapter;
 import xidian.xianjujiao.com.fragment.innerFragments.CommondFragment;
+import xidian.xianjujiao.com.manager.ChannelManager;
 
 /**
  * 视频的Fragment
@@ -51,9 +52,6 @@ public class VideoFragment extends Fragment {
 
     //获取控件
     private void initView() {
-        //隐藏toolbar menu控件
-        ImageButton main_action_menu= (ImageButton) view.findViewById(R.id.main_action_menu);
-        main_action_menu.setVisibility(View.GONE);
         //获取到标题栏控件
         tv_title = (TextView) view.findViewById(R.id.title);
         tv_title.setText("视频");
@@ -77,7 +75,7 @@ public class VideoFragment extends Fragment {
 
     //设置适配器
     private void setAdapter() {
-        adapter = new TabPageIndicatorAdapter(getFragmentManager(), fragments, TITLE);
+        adapter = new TabPageIndicatorAdapter(getFragmentManager(), fragments, ChannelManager.getChannelManager().getUserChannel());
         video_viewpager.setAdapter(adapter);
         indicator.setViewPager(video_viewpager);
     }

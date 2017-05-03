@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    android:layout_width="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="match_parent"
+    android:background="#e9e9ea"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp">
+
+        <View
+            android:layout_width="3dp"
+            android:layout_height="20dp"
+            android:background="@drawable/vertical_dash_line"
+            android:layerType="software" />
+
+        <TextView
+            android:id="@+id/tv_news_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="3dp"
+            android:maxLines="1"
+            android:textColor="@color/text_black"
+            android:layout_gravity="center_horizontal"
+            android:text="三小时前"
+            android:textSize="7sp" />
+
+        <View
+            android:layout_width="3dp"
+            android:layout_height="40dp"
+            android:background="@drawable/vertical_dash_line"
+            android:layerType="software" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_weight="4"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:orientation="horizontal"
+        android:background="@color/cardview_light_background">
+
+        <TextView
+            android:id="@+id/tv_focus_news_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:textColor="@color/text_black"
+            android:text="为民发声 百姓是否满意"
+            android:textSize="18sp" />
+
+        <ImageView
+            android:id="@+id/iv_focus_news"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_gravity="end"
+            android:layout_weight="1"
+            android:background="@drawable/product_default"
+            android:scaleType="fitXY" />
+    </LinearLayout>
+
+</LinearLayout>
+

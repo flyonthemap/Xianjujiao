@@ -1,8 +1,8 @@
 package xidian.xianjujiao.com.utils;
 
 import android.text.TextUtils;
-import android.util.Log;
 
+import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -15,7 +15,10 @@ import java.util.Set;
 
 import xidian.xianjujiao.com.entity.ChannelItem;
 import xidian.xianjujiao.com.entity.ChapterListItem;
+import xidian.xianjujiao.com.entity.FocusNewsData;
 import xidian.xianjujiao.com.entity.GameListItem;
+import xidian.xianjujiao.com.entity.LiveModuleName;
+import xidian.xianjujiao.com.entity.NewsData;
 import xidian.xianjujiao.com.manager.ChannelManager;
 
 /**
@@ -23,6 +26,7 @@ import xidian.xianjujiao.com.manager.ChannelManager;
  * json解析工具类
  */
 public class JsonUtils {
+    private static Gson gson = new Gson();
     /**
      * json解析方法
      * 根据json数据格式来进行设计
@@ -180,18 +184,13 @@ public class JsonUtils {
                 channelItem.setSelected(0);
                 otherChannel.add(channelItem);
                 allChannelId.add(channelItem.getId());
-                Log.e("debug",channelItem.toString());
 
 
             }
-
-            Log.e("debug",itemJson.toString());
+            // 如果模块发生变化，则更新本地数据库
             if(!allChannelId.equals(channelManager.getAllChannelId())){
-                Log.e("debug","no equals.....");
                 channelManager.setDefaultUserChannels(defaultChannel);
                 channelManager.setDefaultOtherChannels(otherChannel);
-            }else{
-                Log.e("debug","equals.....");
             }
 
         } catch (JSONException e) {
@@ -199,7 +198,6 @@ public class JsonUtils {
         }
     }
     /**
-     * 异常信息：org.json.JSONException: Value﻿ of type java.lang.String cannot be converted to JSONObject
      * json串头部出现字符："\ufeff" 解决方法
      * @param data
      * @return
@@ -216,4 +214,15 @@ public class JsonUtils {
         }
     }
 
+    public static List<NewsData.NewItem> parseNewsData(String result) {
+        return gson.fromJson(result, NewsData.class).news;
+    }
+    public static FocusNewsData parseFocusNewsData(String result) {
+        return gson.fromJson(result, FocusNewsData.class);
+    }
+
+
+    public static List<LiveModuleName.ModuleData> parseLiveModuleName(String result) {
+        return gson.fromJson(result, LiveModuleName.class).data;
+    }
 }

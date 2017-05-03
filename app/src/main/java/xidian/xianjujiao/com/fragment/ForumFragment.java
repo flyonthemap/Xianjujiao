@@ -38,9 +38,7 @@ public class ForumFragment extends Fragment {
 
     //获取控件
     private void initView() {
-        //隐藏toolbar menu控件
-        ImageButton main_action_menu= (ImageButton) view.findViewById(R.id.main_action_menu);
-        main_action_menu.setVisibility(View.GONE);
+
         TextView tv_title = (TextView) view.findViewById(R.id.title);
         tv_title.setText("论坛");
         web_view = (WebView) view.findViewById(R.id.web_view);

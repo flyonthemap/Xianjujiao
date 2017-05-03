@@ -5,6 +5,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -18,10 +20,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import xidian.xianjujiao.com.adapter.MainFragmentPageAdapter;
+import xidian.xianjujiao.com.fragment.FocusFragment;
 import xidian.xianjujiao.com.fragment.HeadlinesFragment;
 import xidian.xianjujiao.com.fragment.ForumFragment;
 import xidian.xianjujiao.com.fragment.GameFragment;
+import xidian.xianjujiao.com.fragment.LiveFragment;
 import xidian.xianjujiao.com.fragment.VideoFragment;
+import xidian.xianjujiao.com.fragment.innerFragments.NewsFragment;
 import xidian.xianjujiao.com.utils.SystemBarTintManager;
 import xidian.xianjujiao.com.view.TipsToast;
 
@@ -37,72 +42,26 @@ public class MainActivity extends FragmentActivity {
     public final static int CHANNELREQUEST = 1;
     /** 调整返回的RESULTCODE */
     public final static int CHANNELRESULT = 2;
+    HeadlinesFragment headlines_Fragments;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        initWindow();
-        initView();
+//        initWindow();
         initData();
+        initView();
+
         setAdapter();
         setListener();
-        checkUpdate();
     }
 
-    private void checkUpdate() {
-        //初始化自动更新对象
-//        mUpdManager = IFlytekUpdate.getInstance(this);
-//        //开启调试模式，默认不开启
-//        mUpdManager.setDebugMode(true);
-//        //开启wifi环境下检测更新，仅对自动更新有效，强制更新则生效
-//        mUpdManager.setParameter(UpdateConstants.EXTRA_WIFIONLY, "true");
-//        //设置通知栏使用应用icon，详情请见示例
-//        mUpdManager.setParameter(UpdateConstants.EXTRA_NOTI_ICON, "true");
-//        //设置更新提示类型，默认为通知栏提示
-//        mUpdManager.setParameter(UpdateConstants.EXTRA_STYLE, UpdateConstants.UPDATE_UI_DIALOG);
-//        // 启动自动更新
-//        mUpdManager.autoUpdate(MainActivity.this, new IFlytekUpdateListener() {
-//            @Override
-//            public void onResult(int errorcode, UpdateInfo result) {
-//                Log.i("---->UPDAT",result.toString());
-//                if (errorcode == UpdateErrorCode.OK && result != null) {
-//                    if (result.getUpdateType() == UpdateType.NoNeed) {
-//                        return;
-//                    }
-//                    mUpdManager.showUpdateInfo(MainActivity.this, result);
-//                } else {
-//                    ToastUtil.showShort(MainActivity.this, "请求更新失败\n更新错误码：" + errorcode);
-//                }
-//            }
-//        });
-    }
-
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-//        MobclickAgent.onResume(this);
-    }
-
-    //初始化窗体布局
-    private void initWindow() {
-        SystemBarTintManager tintManager;
-        //由于沉浸式状态栏需要在Android4.4.4以上才能使用
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-            tintManager = new SystemBarTintManager(this);
-            tintManager.setStatusBarTintColor(getResources().getColor(R.color.colorBackground));
-            tintManager.setStatusBarTintEnabled(true);
-        }
-    }
 
     //初始化控件
     private void initView() {
         main_viewPager = (ViewPager) findViewById(R.id.main_viewpager);
         //设置viewpager的预加载页数，viewpager默认只会预加载左右两边的页面数据
-        main_viewPager.setOffscreenPageLimit(4);
+        main_viewPager.setOffscreenPageLimit(1);
         rgp = (RadioGroup) findViewById(R.id.main_rgp);
         //设置默认第一个为选中状态
         RadioButton rb = (RadioButton) rgp.getChildAt(0);
@@ -111,14 +70,16 @@ public class MainActivity extends FragmentActivity {
 
     //初始化数据
     private void initData() {
-        HeadlinesFragment headlines_Fragments = new HeadlinesFragment();
+        headlines_Fragments = new HeadlinesFragment();
         ForumFragment forum_Fragment = new ForumFragment();
-        GameFragment game_Fragment = new GameFragment();
         VideoFragment video_Fragment = new VideoFragment();
-        fragments.add(headlines_Fragments);//文章
-        fragments.add(video_Fragment);//视频
+        FocusFragment focusFragment = new FocusFragment();
+        LiveFragment liveFragment = new LiveFragment();
+        fragments.add(headlines_Fragments);// 头条
+        fragments.add(focusFragment);//聚焦
+        fragments.add(video_Fragment);//聚焦
+        fragments.add(liveFragment);//视频
         fragments.add(forum_Fragment);//论坛
-        fragments.add(game_Fragment);//游戏
     }
 
     //设置适配器
@@ -210,24 +171,18 @@ public class MainActivity extends FragmentActivity {
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
-//        super.onSaveInstanceState(outState);
-        //此处解决有时候出现getActivity（）出现null的情况
-    }
-    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         Log.d("debug","收到数据变化" +requestCode +" " +resultCode);
         switch (requestCode) {
             case CHANNELREQUEST:
-                if(resultCode == 10){
-//                    setChangelView();
-                    Log.d("debug","收到数据变化");
-                }
+                // 重新加载Activity实现频道更新！！！！！！！
+                recreate();
                 break;
 
             default:
                 break;
         }
-        super.onActivityResult(requestCode, resultCode, data);
     }
+
 }

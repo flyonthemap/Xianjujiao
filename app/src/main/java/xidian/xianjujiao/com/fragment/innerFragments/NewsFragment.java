@@ -4,20 +4,22 @@ package xidian.xianjujiao.com.fragment.innerFragments;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.res.ConfigurationHelper;
 import android.support.v4.view.ViewCompat;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.ListView;
-
+import android.widget.TextView;
 
 import com.classic.common.MultipleStatusView;
+import com.google.gson.Gson;
+import com.viewpagerindicator.CirclePageIndicator;
 
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
@@ -31,38 +33,48 @@ import butterknife.ButterKnife;
 import in.srain.cube.views.ptr.PtrClassicFrameLayout;
 import in.srain.cube.views.ptr.PtrHandler;
 import xidian.xianjujiao.com.R;
-import xidian.xianjujiao.com.adapter.ListViewAdapter;
-import xidian.xianjujiao.com.entity.ChapterListItem;
+import xidian.xianjujiao.com.activity.VideoNewsDetailActivity;
+import xidian.xianjujiao.com.adapter.ListHeaderAdapter;
+import xidian.xianjujiao.com.adapter.NewsAdapter;
+import xidian.xianjujiao.com.entity.ListHeaderData;
+import xidian.xianjujiao.com.entity.NewsData;
 import xidian.xianjujiao.com.utils.API;
+import xidian.xianjujiao.com.utils.Constant;
 import xidian.xianjujiao.com.utils.JsonUtils;
 import xidian.xianjujiao.com.utils.NetUtils;
 import xidian.xianjujiao.com.utils.ToastUtil;
-import xidian.xianjujiao.com.view.ImageCycleView;
+import xidian.xianjujiao.com.utils.UiUtils;
 
 
 /**
  * 新闻类的Fragemnt
  */
 public class NewsFragment extends Fragment implements AdapterView.OnItemClickListener, AbsListView.OnScrollListener {
-    private static final String TAG = "NewsFragment";
     @Bind(R.id.multiplestatusview)
     MultipleStatusView multiplestatusview;
     @Bind(R.id.ptr_layout)
     PtrClassicFrameLayout ptrLayout;
+    TextView tvTitle;// 头条新闻的标题
+
+    CirclePageIndicator mIndicator;// 头条新闻位置指示器
+    ViewPager mViewPager;
     private View view;
-    private ImageCycleView mImageCycleView;
     private ListView news_lv;
-    private ListViewAdapter adapter;
-    private LayoutInflater mInflater;
+    private NewsAdapter adapter;
     private View mHeadView;
+    private static Handler mHandler;
     private View mFootView;
-    private List<ChapterListItem> data = new ArrayList<>();
+    // 保存全部的条目数据
+    private List<NewsData.NewItem> newsItemList = new ArrayList<>();
     //Android自带下拉刷新控件
-    private List<ChapterListItem> chapterListItems;
+    private List<NewsData.NewItem> newNewsData;
     private int currentPage = 1;//当前页
     private boolean isBottom;//是否到底部的标记
     private boolean isLoadData = false;//判断是否已经在加载数据
-    private String url;
+    private String typeId;
+
+    private ListHeaderAdapter topNewsAdapter;
+    private List<ListHeaderData.Shuffling> mTopNewsList;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -77,86 +89,113 @@ public class NewsFragment extends Fragment implements AdapterView.OnItemClickLis
     }
 
 
+
+
+
+
     //获取控件
     private void initView() {
-        if (mInflater == null) {
-            mInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        }
+        mHeadView = View.inflate(getActivity(),R.layout.banner_view, null);
+        tvTitle = (TextView) mHeadView.findViewById(R.id.tv_title);
+        mIndicator = (CirclePageIndicator) mHeadView.findViewById(R.id.indicator);
+        mViewPager = (ViewPager) mHeadView.findViewById(R.id.vp_news);
+        typeId = getArguments().getString("typeid");
+
         news_lv = (ListView) view.findViewById(R.id.content_view);
 
         //添加头部轮播控件
-        mHeadView = mInflater.inflate(R.layout.banner_view, null);
-        mImageCycleView = (ImageCycleView) mHeadView.findViewById(R.id.icv_topView);
         news_lv.addHeaderView(mHeadView);
         //添加底部加载更多控件
-        mFootView = mInflater.inflate(R.layout.listview_footer, null);
+        mFootView = UiUtils.inflate(R.layout.listview_footer_loading);
+        mFootView.setVisibility(View.GONE);
         news_lv.addFooterView(mFootView, null, false);
-        adapter = new ListViewAdapter(getActivity(), data);
+        adapter = new NewsAdapter(getActivity(), newsItemList);
         //初始化图片轮播数据
         initBanner();
     }
 
     //初始化图片轮播数据
     private void initBanner() {
-
-
-        List<ImageCycleView.ImageInfo> list = new ArrayList<>();
-        //使用网络加载数据，最后一个参数为图片新闻的id
-        list.add(new ImageCycleView.ImageInfo("http://www.3dmgame.com/uploads/allimg/130124/11111111111111111111111111-130124144424.jpg", "新年首款大作 《龙之信条：黑暗觉者》破解版发布", "3542051"));
-        list.add(new ImageCycleView.ImageInfo("http://www.3dmgame.com/uploads/allimg/130124/11111111111111111111-130124145Q3.jpg", "3DM轩辕组制作 《暗黑地牢》正式版汉化补丁发布", "3544323"));
-        list.add(new ImageCycleView.ImageInfo("http://www.3dmgame.com/uploads/allimg/130124/1111111111-130124145Q7.jpg", "育碧旗下射击游戏《全境封锁》PC版详细配置公布", "3544277"));
-        list.add(new ImageCycleView.ImageInfo("http://www.3dmgame.com/uploads/allimg/130124/11111111111-130124145R1.jpg", "PS4《侠盗猎车5》重制版新截图展示华丽视觉效果", "3395945"));
-        list.add(new ImageCycleView.ImageInfo("http://www.3dmgame.com/uploads/allimg/130124/1111111111111111111111111111111-130124145R1-50.jpg", "1月31日3DM新游评测与推荐 老司机是时候开车了", "3545703"));
-        mImageCycleView.setOnPageClickListener(new ImageCycleView.OnPageClickListener() {
+        String shufflingUrl = String.format(API.HEADLINE_SHUFFLING_URL, typeId);
+        x.http().get(new RequestParams(shufflingUrl), new Callback.CommonCallback<String>() {
             @Override
-            public void onClick(View imageView, ImageCycleView.ImageInfo imageInfo) {
-                //点击跳转到文章详情界面
-                Bundle bundle = new Bundle();
-                bundle.putString("typeid", "2");
-                bundle.putString("id", imageInfo.value.toString());
-                //跳转到文章详情界面
-//                Intent intent = new Intent(getActivity(), ArticleDetailActivity.class);
-//                intent.putExtras(bundle);
-//                startActivity(intent);
+            public void onSuccess(String result) {
+                Gson gson = new Gson();
+                ListHeaderData listHeaderData = gson.fromJson(result,ListHeaderData.class);
+                mTopNewsList = listHeaderData.lunbo;
+                mTopNewsList.addAll(listHeaderData.lunbo);
+
             }
-        });
 
-        mImageCycleView.loadData(list, new ImageCycleView.LoadImageCallBack() {
             @Override
-            public ImageView loadAndDisplay(ImageCycleView.ImageInfo imageInfo) {
+            public void onError(Throwable ex, boolean isOnCallback) {
+            }
 
-                //使用BitmapUtils,只能使用网络图片
-                x.view().inject(view);
-                Context context = getContext();
-                ImageView imageView = null;
-                if (context != null) {
-                    imageView = new ImageView(context);
-                    x.image().bind(imageView, imageInfo.image.toString());
+            @Override
+            public void onCancelled(CancelledException cex) {
+            }
+
+            @Override
+            public void onFinished() {
+                if (mTopNewsList != null) {
+                    topNewsAdapter = new ListHeaderAdapter(mTopNewsList);
+                    mViewPager.setAdapter(topNewsAdapter);
+                    mIndicator.setViewPager(mViewPager);
+                    mIndicator.setSnap(true);// 支持快照显示
+                    mIndicator.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+                        @Override
+                        public void onPageSelected(int position) {
+                            tvTitle.setText(mTopNewsList.get(position).title);
+                        }
+                    });
+
+                    mIndicator.onPageSelected(0);// 让指示器重新定位到第一个点
+                    tvTitle.setText(mTopNewsList.get(0).title);
+                    if (mHandler == null) {
+                        mHandler = new Handler() {
+                            public void handleMessage(android.os.Message msg) {
+                                int currentItem = mViewPager.getCurrentItem();
+
+                                if (currentItem < mTopNewsList.size() - 1) {
+                                    currentItem++;
+                                } else {
+                                    currentItem = 0;
+                                }
+
+                                mViewPager.setCurrentItem(currentItem);// 切换到下一个页面
+                                topNewsAdapter.notifyDataSetChanged();
+                                mHandler.sendEmptyMessageDelayed(0, 3000);// 继续延时3秒发消息,
+                                // 形成循环
+                            };
+                        };
+
+                        mHandler.sendEmptyMessageDelayed(0, 3000);// 延时3秒后发消息
+                    }
                 }
-                return imageView;
             }
         });
+
 
     }
 
-    //下载网络数据
-    private void downloadData(final int page) {
+    //请求新闻数据
+    private void requestNewsFromSever(final int page) {
+
         multiplestatusview.showLoading();
         //使用xutils请求网络数据
-        String stUrl = String.format(API.NEWS_URL, page);
-        x.http().get(new RequestParams(stUrl), new Callback.CommonCallback<String>() {
+        String newsUrl = String.format(API.NEWS_URL, typeId,page);
+        x.http().get(new RequestParams(newsUrl), new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
-                Log.e(TAG,result);
                 multiplestatusview.showContent();
-                chapterListItems = JsonUtils.parseChapterJson(result);
+                newNewsData = JsonUtils.parseNewsData(result);
                 if (page == 1) {
-                    data.clear();
+                    newsItemList.clear();
                 }
-                if (chapterListItems.isEmpty()){
+                if (newNewsData.isEmpty()){
                     multiplestatusview.showEmpty();
                 }
-                data.addAll(chapterListItems);
+                newsItemList.addAll(newNewsData);
                 ptrLayout.refreshComplete();
             }
 
@@ -200,7 +239,8 @@ public class NewsFragment extends Fragment implements AdapterView.OnItemClickLis
         multiplestatusview.setOnRetryClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                downloadData(1);
+                Log.e(Constant.DEBUG,"下载方法被调用了1");
+                requestNewsFromSever(1);
             }
         });
     }
@@ -217,18 +257,18 @@ public class NewsFragment extends Fragment implements AdapterView.OnItemClickLis
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         //点击条目跳转到详情界面
-//        Intent intent = new Intent(getContext(), ArticleDetailActivity.class);
+        Intent intent = new Intent(getContext(), VideoNewsDetailActivity.class);
         //将Url地址获取到
         Bundle bundle = new Bundle();
         ///////////此处减-1是因为在listview头部添加了一个viewpager，
         // 造成所有listview的条目的位置都往下移了一个
-        String typeid = data.get(position - 1).getTypeid();//获取到文章分类id
-        String ariticleId = data.get(position - 1).getId();//获取文章id
-        bundle.putString("typeid", typeid);
-        bundle.putString("id", ariticleId);
-        Log.i("=====>", "" + typeid + "=====》" + ariticleId);
-//        intent.putExtras(bundle);
-//        startActivity(intent);
+        int curPosition = position -1;
+        NewsData.NewItem curItem = newsItemList.get(curPosition);
+        bundle.putInt("type", curItem.type);
+        bundle.putString("newsId", curItem.news_id);
+//        Log.e(Constant.DEBUG,"=====>"+ "" + typeid + "=====》" + ariticleId);
+        intent.putExtras(bundle);
+        startActivity(intent);
     }
 
     //////////////////////listview的滑动事件监听/////////////////
@@ -237,48 +277,61 @@ public class NewsFragment extends Fragment implements AdapterView.OnItemClickLis
         //isBottom是自定义的boolean变量，用于标记是否滑动到底部
         if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE && isBottom && !isLoadData) {
             //如果加载到底部则加载下一页的数据显示到listview中
-            currentPage++;
-            //加载新数据
-            isLoadData = true;//将加载数据的状态设置为true
-            url = String.format(API.NEWS_URL, currentPage);
-            mFootView.setVisibility(View.VISIBLE);//设置进度条出现
-            //xutils加载网络数据
-            x.http().get(new RequestParams(url), new Callback.CommonCallback<String>() {
-                @Override
-                public void onSuccess(String result) {
-                    String json = new String(result);
-                    chapterListItems = JsonUtils.parseChapterJson(json);
-                    if (chapterListItems != null) {
+          loadMoreData();
+
+        }
+    }
+
+    private void loadMoreData() {
+
+        currentPage++;
+        isLoadData = true;//将加载数据的状态设置为true
+        String newsUrl = String.format(API.NEWS_URL,typeId, currentPage);
+        mFootView.setVisibility(View.VISIBLE);//设置进度条出现
+        x.http().get(new RequestParams(newsUrl), new Callback.CommonCallback<String>() {
+            @Override
+            public void onSuccess(String result) {
+                newNewsData = JsonUtils.parseNewsData(result);
+                if(newNewsData == null){
+                    mFootView.setVisibility(View.GONE);//设置隐藏进度条
+                }else{
+                    if (newNewsData.size() != 0) {
                         mFootView.setVisibility(View.GONE);//设置隐藏进度条
-                        data.addAll(chapterListItems);
+                        newsItemList.addAll(newNewsData);
                         adapter.notifyDataSetChanged();
-                        isLoadData = false;//下载完数据之后，将状态设为false
+                        //请求完数据之后将状态设为false
+                        isLoadData = false;
+                    }else if(newNewsData.size() == 0) {
+                        news_lv.removeFooterView(mFootView);
+                        mFootView = UiUtils.inflate(R.layout.listview_footer_no_more);
+                        news_lv.addFooterView(mFootView, null, false);
+                        isLoadData = false;
                     }
                 }
 
-                @Override
-                public void onError(Throwable ex, boolean isOnCallback) {
-                    ToastUtil.showShort(getActivity(),"加载失败");
-                }
+            }
 
-                @Override
-                public void onCancelled(CancelledException cex) {
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+                ToastUtil.showShort(getActivity(),"加载失败");
+            }
 
-                }
+            @Override
+            public void onCancelled(CancelledException cex) {
 
-                @Override
-                public void onFinished() {
+            }
 
-                }
-            });
+            @Override
+            public void onFinished() {
 
-        }
+            }
+        });
     }
 
     @Override
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
         //若第一个可见的item的下标+可见的条目的数量=当前listview中总的条目数量，则说明已经到达底部
-        isBottom = firstVisibleItem + visibleItemCount == totalItemCount;
+        isBottom = ((firstVisibleItem + visibleItemCount) == totalItemCount);
     }
 
     @Override
@@ -295,7 +348,7 @@ public class NewsFragment extends Fragment implements AdapterView.OnItemClickLis
 
             @Override
             public void onRefreshBegin(in.srain.cube.views.ptr.PtrFrameLayout frame) {
-                downloadData(1);
+                requestNewsFromSever(1);
             }
         });
         ptrLayout.setLastUpdateTimeRelateObject(this);//设置是否显示上次更新时间
@@ -306,7 +359,7 @@ public class NewsFragment extends Fragment implements AdapterView.OnItemClickLis
      * 判断是否滑动到顶端
      * @return
      */
-    public boolean canChildScrollUp() {
+    private boolean canChildScrollUp() {
         if (android.os.Build.VERSION.SDK_INT < 14) {
             if (news_lv instanceof AbsListView) {
                 final AbsListView absListView = (AbsListView) news_lv;
@@ -325,4 +378,7 @@ public class NewsFragment extends Fragment implements AdapterView.OnItemClickLis
         }
 
     }
+
+
+
 }

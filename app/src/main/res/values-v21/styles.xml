@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorWhite</item>
+        <item name="colorPrimaryDark">@color/colorWhite</item>
+        <item name="colorAccent">@color/colorWhite</item>
+        <item name="android:fitsSystemWindows">true</item>
+        <item name="android:textColorPrimary">?android:attr/colorForegroundInverse</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:statusBarColor">@color/vpi__bright_foreground_disabled_holo_light</item>
+        <item name="android:navigationBarColor">@color/default_underline_indicator_selected_color
+        </item>
+    </style>
+</resources>

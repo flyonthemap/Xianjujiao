@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -64,6 +65,7 @@ public class CommondFragment extends Fragment implements AdapterView.OnItemClick
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Log.e("debug",CommondFragment.class.getSimpleName());
         inflate = inflater.inflate(R.layout.fragment_commond, container, false);
         ButterKnife.bind(this, inflate);
         if (mInflater == null) {
@@ -71,7 +73,7 @@ public class CommondFragment extends Fragment implements AdapterView.OnItemClick
         }
         lv_data = (ListView) inflate.findViewById(R.id.content_view);
         //添加listview底部控件
-        mFootView = mInflater.inflate(R.layout.listview_footer, null);
+        mFootView = mInflater.inflate(R.layout.listview_footer_loading, null);
         lv_data.addFooterView(mFootView, null, false);//设置为false 则不可点击，否则会报错
         setListener();
         return inflate;

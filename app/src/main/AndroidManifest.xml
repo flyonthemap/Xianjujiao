@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:versionCode="1"
+    android:versionName="1.0"
     package="xidian.xianjujiao.com">
     <!-- 用户权限 -->
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -17,6 +20,7 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
     <!-- 震动权限 -->
     <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-sdk tools:overrideLibrary="fm.jiecao.jcvideoplayer_lib"/>
     <application
         android:name=".application.BaseApplication"
         android:allowBackup="true"
@@ -25,7 +29,20 @@
         android:supportsRtl="true"
         android:theme="@style/StyledIndicators">
         <activity
+
             android:name=".MainActivity"
+            android:theme="@style/StyledIndicators"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait">
+
+        </activity>
+        <activity
+            android:name=".activity.ChannelActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name=".activity.Welcome"
             android:launchMode="singleTask"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -35,49 +52,19 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.ChannelActivity"
-            android:launchMode="singleTask">
-        </activity>
-        <!--极光推送相关配置  start-->
-        <service
-            android:name="cn.jpush.android.service.PushService"
-            android:enabled="true"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="cn.jpush.android.intent.REGISTER"/>
-                <action android:name="cn.jpush.android.intent.REPORT"/>
-                <action android:name="cn.jpush.android.intent.PushService"/>
-                <action android:name="cn.jpush.android.intent.PUSH_TIME"/>
-            </intent-filter>
-        </service>
-
-        <receiver
-            android:name="cn.jpush.android.service.PushReceiver"
-            android:enabled="true">
-            <intent-filter android:priority="1000">
-                <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED_PROXY"/>
-                <category android:name="com.stx.xhb.dmgameapp"/>
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.USER_PRESENT"/>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
-            </intent-filter>
-            <!-- Optional -->
-            <intent-filter>
-                <action android:name="android.intent.action.PACKAGE_ADDED"/>
-                <action android:name="android.intent.action.PACKAGE_REMOVED"/>
-
-                <data android:scheme="package"/>
-            </intent-filter>
-        </receiver>
-
-        <service
-            android:name="cn.jpush.android.service.DownloadService"
-            android:enabled="true"
-            android:exported="false">
-        </service>
-        <receiver android:name="cn.jpush.android.service.AlarmReceiver"/>
-        <!--极光推送相关配置  end-->
+            android:name=".activity.NewsDetailActivity"
+            android:theme="@style/AppTheme"
+            android:hardwareAccelerated="true"
+            />
+        <activity
+            android:name=".activity.VideoNewsDetailActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.SearchActivity"
+            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait" />
 
     </application>
 

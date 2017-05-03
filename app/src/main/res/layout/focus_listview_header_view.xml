@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <RelativeLayout
+        android:padding="5dp"
+        android:layout_width="match_parent"
+        android:background="@color/cardview_light_background"
+        android:layout_height="32dp">
+
+        <View
+            android:id="@+id/view_left"
+            android:layout_width="8dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:background="@color/grey700">
+
+        </View>
+        <TextView
+            android:id="@+id/tv_header_title"
+            android:layout_alignLeft="@+id/view_left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:textColor="@color/text_black"
+            android:maxLines="1"
+            android:textSize="18sp"
+            android:ellipsize="end" />
+        <View
+            android:layout_width="8dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:background="@color/grey700">
+
+        </View>
+    </RelativeLayout>
+    <xidian.xianjujiao.com.view.ListHeaderViewPager
+        android:id="@+id/vp_focus"
+        android:layout_width="match_parent"
+        android:layout_height="180dp">
+
+    </xidian.xianjujiao.com.view.ListHeaderViewPager>
+    <xidian.xianjujiao.com.view.HorizontalListView
+        android:layout_width="match_parent"
+        android:paddingLeft="25dp"
+        android:paddingRight="25dp"
+        android:id="@+id/hlv_overview"
+        android:layout_height="60dp"
+        >
+
+    </xidian.xianjujiao.com.view.HorizontalListView>
+    <TextView
+        android:id="@+id/tv_focus_module_title"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:textSize="24sp"
+        android:gravity="center"
+        android:textColor="@color/text_black"
+        android:background="@color/cardview_light_background"
+        android:text="聚焦进行时"/>
+</LinearLayout>

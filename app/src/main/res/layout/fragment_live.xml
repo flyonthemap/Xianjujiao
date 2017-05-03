@@ -1,0 +1,30 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    tools:context=".fragment.VideoFragment">
+
+    <!-- 标题 -->
+    <include layout="@layout/title_layout">
+
+    </include>
+
+    <android.support.design.widget.TabLayout
+        android:id="@+id/live_tabs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/tablayoyt_background"
+        app:tabSelectedTextColor="@color/tablayout_text_selected"
+        app:tabTextColor="@color/tablayout_text_color"
+        app:tabIndicatorHeight="0dp"
+        />
+    <android.support.v4.view.ViewPager
+        android:id="@+id/live_viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@android:color/white" />
+
+</LinearLayout>

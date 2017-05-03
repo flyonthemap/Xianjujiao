@@ -1,9 +1,11 @@
 package xidian.xianjujiao.com.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,7 +29,6 @@ import xidian.xianjujiao.com.MainActivity;
 import xidian.xianjujiao.com.R;
 import xidian.xianjujiao.com.adapter.DragAdapter;
 import xidian.xianjujiao.com.adapter.OtherAdapter;
-import xidian.xianjujiao.com.application.BaseApplication;
 import xidian.xianjujiao.com.entity.ChannelItem;
 import xidian.xianjujiao.com.manager.ChannelManager;
 import xidian.xianjujiao.com.view.channelView.DragGrid;
@@ -36,15 +37,13 @@ import xidian.xianjujiao.com.view.channelView.OtherGridView;
 /**
  * 频道管理
  */
-public class ChannelActivity extends BaseActivity implements OnItemClickListener {
+public class ChannelActivity extends Activity implements OnItemClickListener {
 	public static String TAG = "ChannelActivity";
-	/**
-	 * 用户栏目的GRIDVIEW
-	 */
+
+	// 用户栏目
 	private DragGrid userGridView;
-	/**
-	 * 其它栏目的GRIDVIEW
-	 */
+
+	// 其他栏目
 	private OtherGridView otherGridView;
 	/**
 	 * 用户栏目对应的适配器，可以拖动
@@ -66,6 +65,9 @@ public class ChannelActivity extends BaseActivity implements OnItemClickListener
 	 * 是否在移动，由于这边是动画结束后才进行的数据更替，设置这个限制为了避免操作太频繁造成的数据错乱。
 	 */
 	boolean isMove = false;
+
+	/** 调整返回的RESULTCODE */
+	public final static int CHANNELRESULT = 2;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -110,7 +112,7 @@ public class ChannelActivity extends BaseActivity implements OnItemClickListener
 		}
 		switch (parent.getId()) {
 			case R.id.userGridView:
-				//position为 0，1 的不可以进行任何操作
+				//position为 0，1 的不可以进行任何操作，即前两个模块默认不能修改
 				if (position != 0 && position != 1) {
 					final ImageView moveImageView = getView(view);
 					if (moveImageView != null) {
@@ -267,31 +269,14 @@ public class ChannelActivity extends BaseActivity implements OnItemClickListener
 		return iv;
 	}
 
-	/**
-	 * 退出时候保存选择后数据库的设置
-	 */
+	// 退出时保存后台数据库设置
 	private void saveChannel() {
 		ChannelManager.getChannelManager().deleteAllChannel();
 		ChannelManager.getChannelManager().saveUserChannel(userAdapter.getChannnelLst());
 		ChannelManager.getChannelManager().saveOtherChannel(otherAdapter.getChannnelLst());
+
 	}
 
-//	@Override
-//	public void onBackPressed() {
-//		Log.d("debug", "数据发生改变1");
-//		saveChannel();
-//		if(userAdapter.isListChanged()){
-//			Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-//			setResult(MainActivity.CHANNELRESULT, intent);
-//			finish();
-//			Log.d("debug", "数据发生改变");
-//		}else{
-//			super.onBackPressed();
-//			Log.d("debug", "数据发生改变3");
-//		}
-//		overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
-//		Log.d("debug", "数据发生改变2");
-//	}
 
 
 	@Override
@@ -299,9 +284,10 @@ public class ChannelActivity extends BaseActivity implements OnItemClickListener
 		super.onPause();
 		saveChannel();
 		if (userAdapter.isListChanged()) {
-			Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-			setResult(MainActivity.CHANNELRESULT, intent);
+//			Intent intent = new Intent(getApplicationContext(), MainActivity.class);
 			finish();
+			setResult(CHANNELRESULT);
+
 			Log.d("debug", "数据发生改变");
 		} else {
 			super.onBackPressed();
