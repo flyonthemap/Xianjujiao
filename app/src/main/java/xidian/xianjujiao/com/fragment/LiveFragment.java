@@ -65,14 +65,6 @@ public class LiveFragment extends Fragment {
             public void onTabSelected(TabLayout.Tab tab) {
                 super.onTabSelected(tab);
                 vp_live.setCurrentItem(tab.getPosition());
-                int selectedTabPosition = vp_live.getCurrentItem();
-                Log.d(TAG, "Selected " + tab.getPosition());
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-                super.onTabUnselected(tab);
-                Log.d(TAG, "Unselected " + tab.getPosition());
             }
         });
     }
@@ -94,12 +86,10 @@ public class LiveFragment extends Fragment {
                 moduleDataList = JsonUtils.parseLiveModuleName(result);
                 if(moduleDataList != null){
                     for (int i = 0; i < moduleDataList.size(); i++) {
-                       addPage(moduleDataList.get(i).module_name);
+                        // 动态添加Tab标签
+                       addPage(moduleDataList.get(i));
                     }
                 }
-
-
-
             }
 
             @Override
@@ -135,15 +125,15 @@ public class LiveFragment extends Fragment {
 
 
     }
-    public void addPage(String pageName) {
+    public void addPage(LiveModuleName.ModuleData moduleData) {
         Bundle bundle = new Bundle();
-        bundle.putString("data", pageName);
+        bundle.putString("module_id", moduleData.module_id);
         LiveModuleFragment fragmentChild = new LiveModuleFragment();
         fragmentChild.setArguments(bundle);
-        pagerAdapter.addFrag(fragmentChild, pageName);
+        pagerAdapter.addFrag(fragmentChild, moduleData.module_name);
         pagerAdapter.notifyDataSetChanged();
-        if (pagerAdapter.getCount() > 0) tabLayout.setupWithViewPager(vp_live);
-
+        if (pagerAdapter.getCount() > 0)
+            tabLayout.setupWithViewPager(vp_live);
         vp_live.setCurrentItem(0);
         if(tabLayout.getTabCount()>6){
             tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);

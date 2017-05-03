@@ -20,10 +20,9 @@ import xidian.xianjujiao.com.utils.UiUtils;
  * Created by flyonthemap on 2017/4/26.
  */
 
-public class ListHeaderAdapter extends PagerAdapter {
-
+public class HeadLinesHeaderAdapter extends PagerAdapter {
     private List<ListHeaderData.Shuffling> shufflings;
-    public ListHeaderAdapter(List<ListHeaderData.Shuffling> shufflings) {
+    public HeadLinesHeaderAdapter(List<ListHeaderData.Shuffling> shufflings) {
         this.shufflings = shufflings;
     }
 

@@ -1,7 +1,6 @@
 package xidian.xianjujiao.com.fragment.innerFragments;
 
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -34,7 +33,7 @@ import in.srain.cube.views.ptr.PtrClassicFrameLayout;
 import in.srain.cube.views.ptr.PtrHandler;
 import xidian.xianjujiao.com.R;
 import xidian.xianjujiao.com.activity.VideoNewsDetailActivity;
-import xidian.xianjujiao.com.adapter.ListHeaderAdapter;
+import xidian.xianjujiao.com.adapter.HeadLinesHeaderAdapter;
 import xidian.xianjujiao.com.adapter.NewsAdapter;
 import xidian.xianjujiao.com.entity.ListHeaderData;
 import xidian.xianjujiao.com.entity.NewsData;
@@ -73,7 +72,7 @@ public class NewsFragment extends Fragment implements AdapterView.OnItemClickLis
     private boolean isLoadData = false;//判断是否已经在加载数据
     private String typeId;
 
-    private ListHeaderAdapter topNewsAdapter;
+    private HeadLinesHeaderAdapter topNewsAdapter;
     private List<ListHeaderData.Shuffling> mTopNewsList;
 
     @Override
@@ -90,11 +89,9 @@ public class NewsFragment extends Fragment implements AdapterView.OnItemClickLis
 
 
 
-
-
-
     //获取控件
     private void initView() {
+        Log.e("HeadlinesFragment","initView()2调用了");
         mHeadView = View.inflate(getActivity(),R.layout.banner_view, null);
         tvTitle = (TextView) mHeadView.findViewById(R.id.tv_title);
         mIndicator = (CirclePageIndicator) mHeadView.findViewById(R.id.indicator);
@@ -138,7 +135,7 @@ public class NewsFragment extends Fragment implements AdapterView.OnItemClickLis
             @Override
             public void onFinished() {
                 if (mTopNewsList != null) {
-                    topNewsAdapter = new ListHeaderAdapter(mTopNewsList);
+                    topNewsAdapter = new HeadLinesHeaderAdapter(mTopNewsList);
                     mViewPager.setAdapter(topNewsAdapter);
                     mIndicator.setViewPager(mViewPager);
                     mIndicator.setSnap(true);// 支持快照显示

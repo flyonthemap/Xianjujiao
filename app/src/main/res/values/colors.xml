@@ -50,4 +50,9 @@
     <color name="tablayout_text_selected">#212121</color>
     <color name="tablayout_text_color">#ffffff</color>
     <color name="tablayoyt_background">#FF3370</color>
+    <!--headline tab颜色设置-->
+    <color name="header_tab_text_color_selected" >#212121</color>
+    <color name="tablayout_text">#ffcdcdcd</color>
+    <color name="tab_indicator">#4876FF</color>
+    <color name="tab_headline_background">#fff</color>
 </resources>

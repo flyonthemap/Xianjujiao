@@ -2,42 +2,32 @@ package xidian.xianjujiao.com.fragment;
 
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.viewpagerindicator.TabPageIndicator;
 
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import xidian.xianjujiao.com.MainActivity;
 import xidian.xianjujiao.com.R;
 import xidian.xianjujiao.com.activity.ChannelActivity;
 import xidian.xianjujiao.com.activity.SearchActivity;
-import xidian.xianjujiao.com.adapter.TabPageIndicatorAdapter;
-import xidian.xianjujiao.com.db.SQLHelper;
+import xidian.xianjujiao.com.adapter.LiveFragmentPagerAdapter;
 import xidian.xianjujiao.com.entity.ChannelItem;
-import xidian.xianjujiao.com.fragment.innerFragments.CommondFragment;
 import xidian.xianjujiao.com.fragment.innerFragments.NewsFragment;
 import xidian.xianjujiao.com.manager.ChannelManager;
 import xidian.xianjujiao.com.utils.API;
 import xidian.xianjujiao.com.utils.JsonUtils;
-import xidian.xianjujiao.com.utils.NetUtils;
 import xidian.xianjujiao.com.utils.UiUtils;
 
 /**
@@ -46,41 +36,36 @@ import xidian.xianjujiao.com.utils.UiUtils;
 public class HeadlinesFragment extends Fragment {
 
     public final static int CHANNELREQUEST = 1;
-    /** 调整返回的RESULTCODE */
-    private View view;
-    private ViewPager article_viewpager;
-    private TabPageIndicator indicator;
-    private TabPageIndicatorAdapter adapter;
-    //fragment的集合
-    private List<Fragment> fragments = new ArrayList<>();
+
+
+    private ViewPager vp_headline;
     private TextView tv_title;
-    private ImageButton main_action_menu;
     private ImageButton ibSearch;
     private ImageButton ibMoreChannel;
+    private TabLayout tabLayout;
     // channelId的集合
     private List<ChannelItem> channelItemList;
+    private LiveFragmentPagerAdapter pagerAdapter;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_headlines, container, false);
+        View view = inflater.inflate(R.layout.fragment_headlines, container, false);
         initData();
-        initView();
+        initView(view);
         setAdapter();
         setListener();
         return view;
     }
 
     //获取控件
-    private void initView() {
-        //隐藏toolbar menu控件
-
+    private void initView(View view) {
+        Log.e("HeadlinesFragment","initView()调用了");
         ibSearch = (ImageButton) view.findViewById(R.id.ib_search);
         //获取到标题栏控件
         tv_title = (TextView) view.findViewById(R.id.title);
-        tv_title.setText("文章");
-        article_viewpager = (ViewPager) view.findViewById(R.id.article_viewpager);
-        //实例化TabPageIndicator然后设置ViewPager与之关联
-        indicator = (TabPageIndicator) view.findViewById(R.id.article_indicator);
+        tv_title.setText("西安聚焦");
+        vp_headline = (ViewPager) view.findViewById(R.id.vp_headline);
+        tabLayout = (TabLayout) view.findViewById(R.id.headline_tabs);
 
         ibMoreChannel = (ImageButton) view.findViewById(R.id.btn_more_channel);
 
@@ -107,26 +92,21 @@ public class HeadlinesFragment extends Fragment {
 
             @Override
             public void onFinished() {
-
+                channelItemList = ChannelManager.getChannelManager().getUserChannel();
+                for (int i = 0; i < channelItemList.size(); i++) {
+                    addPage(channelItemList.get(i));
+                }
             }
         });
-        channelItemList = ChannelManager.getChannelManager().getUserChannel();
-        for (int i = 0; i < channelItemList.size(); i++) {
-            NewsFragment fragment = new NewsFragment();//杂谈
-            Bundle bundle = new Bundle();
-            bundle.putString("typeid", channelItemList.get(i).getId());
-            fragment.setArguments(bundle);
-            fragments.add(fragment);
-        }
+
     }
 
     //设置适配器
     private void setAdapter() {
-        //实例化适配器
-        adapter = new TabPageIndicatorAdapter(getFragmentManager(), fragments,ChannelManager.getChannelManager().getUserChannel());
-        //设置适配器
-        article_viewpager.setAdapter(adapter);
-        indicator.setViewPager(article_viewpager, 0);
+        pagerAdapter = new LiveFragmentPagerAdapter(getFragmentManager(),vp_headline,tabLayout);
+        vp_headline.setAdapter(pagerAdapter);
+        tabLayout.setupWithViewPager(vp_headline);
+        vp_headline.setOffscreenPageLimit(4);
     }
 
     //设置监听
@@ -146,8 +126,29 @@ public class HeadlinesFragment extends Fragment {
                 startActivity(intent);
             }
         });
+        tabLayout.setOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(vp_headline) {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                super.onTabSelected(tab);
+                vp_headline.setCurrentItem(tab.getPosition());
+            }
+        });
     }
-
-
+    public void addPage(ChannelItem channelItem) {
+        Bundle bundle = new Bundle();
+        bundle.putString("typeid", channelItem.getId());
+        NewsFragment fragmentChild = new NewsFragment();
+        fragmentChild.setArguments(bundle);
+        pagerAdapter.addFrag(fragmentChild, channelItem.getName());
+        pagerAdapter.notifyDataSetChanged();
+        if (pagerAdapter.getCount() > 0)
+            tabLayout.setupWithViewPager(vp_headline);
+        vp_headline.setCurrentItem(0);
+        if(tabLayout.getTabCount()>6){
+            tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
+        }else {
+            tabLayout.setTabMode(TabLayout.MODE_FIXED);
+        }
+    }
 
 }
