@@ -1,4 +1,13 @@
 <resources>
     <string name="app_name">聚焦西安</string>
     <string name="load_no_more">哥，这回真没了</string>
+    <string name="remaining_time">录音时间(%1$d/180)s</string>
+    <string name="null_phone">手机号码不能为空</string>
+    <string name="error_phone">输入的手机号码格式不正确</string>
+    <string name="get_verification_code">获取验证码</string>
+    <string name="input_phone_num">请输入手机号码</string>
+    <string name="input_verification_code">请输入正确的验证码</string>
+    <string name="null_captcha">验证码不能为空</string>
+    <string name="send_message">获取验证码成功</string>
+    <string name="get_code_remaining_time">剩余时间%1$ds</string>
 </resources>

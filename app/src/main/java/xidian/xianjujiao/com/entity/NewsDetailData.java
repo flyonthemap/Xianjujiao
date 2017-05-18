@@ -18,6 +18,7 @@ public class NewsDetailData {
         public String video;
         public String create_time;
         public String content;
+        public String from;
 
         @Override
         public String toString() {

@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
     <RelativeLayout
         android:padding="5dp"
         android:layout_width="match_parent"
@@ -35,12 +35,21 @@
 
         </View>
     </RelativeLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:background="@color/fab_material_grey_500"/>
     <xidian.xianjujiao.com.view.ListHeaderViewPager
         android:id="@+id/vp_focus"
+        android:paddingRight="5dp"
+        android:paddingLeft="5dp"
         android:layout_width="match_parent"
         android:layout_height="180dp">
 
     </xidian.xianjujiao.com.view.ListHeaderViewPager>
+
     <xidian.xianjujiao.com.view.HorizontalListView
         android:layout_width="match_parent"
         android:paddingLeft="25dp"
@@ -53,7 +62,6 @@
     <TextView
         android:id="@+id/tv_focus_module_title"
         android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
         android:layout_width="match_parent"
         android:layout_height="30dp"
         android:textSize="24sp"

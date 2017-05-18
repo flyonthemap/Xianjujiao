@@ -56,7 +56,7 @@ public class ListViewAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder = null;
         if (convertView == null) {
-            convertView = mLayoutInflater.inflate(R.layout.listview_item_layout, parent, false);
+            convertView = mLayoutInflater.inflate(R.layout.search_item_layout, parent, false);
             viewHolder = new ViewHolder();
             viewHolder.title = (TextView) convertView.findViewById(R.id.title);
             viewHolder.date = (TextView) convertView.findViewById(R.id.date);

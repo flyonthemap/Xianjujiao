@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -71,6 +70,7 @@ public class HeadlinesFragment extends Fragment {
     private void initView(View view) {
         Log.e("HeadlinesFragment","initView()调用了");
         ibSearch = (ImageButton) view.findViewById(R.id.ib_search);
+        ibSearch.setVisibility(View.VISIBLE);
         //获取到标题栏控件
         tv_title = (TextView) view.findViewById(R.id.title);
         tv_title.setText("西安聚焦");
@@ -86,6 +86,8 @@ public class HeadlinesFragment extends Fragment {
         x.http().get(new RequestParams(API.CHANNEL_LIST_URL), new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
+                Log.e("MainActivity",API.CHANNEL_LIST_URL);
+                Log.e("MainActivity",result);
                 multiplestatusview.showContent();
                 JsonUtils.parseChannelJson(result);
 
@@ -150,6 +152,7 @@ public class HeadlinesFragment extends Fragment {
                 vp_headline.setCurrentItem(tab.getPosition());
             }
         });
+
     }
     public void addPage(ChannelItem channelItem) {
         Bundle bundle = new Bundle();

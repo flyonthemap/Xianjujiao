@@ -18,5 +18,5 @@
         android:id="@+id/error_view_tv"
         style="@style/MultipleStatusView.Content"
         android:layout_below="@id/error_retry_view"
-        android:text="加载失败,点击重试" />
+        android:text="加载失败,下拉重试" />
 </LinearLayout>

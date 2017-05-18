@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.WindowManager;
@@ -20,14 +21,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 import xidian.xianjujiao.com.adapter.MainFragmentPageAdapter;
+import xidian.xianjujiao.com.fragment.FactFragment;
 import xidian.xianjujiao.com.fragment.FocusFragment;
 import xidian.xianjujiao.com.fragment.HeadlinesFragment;
 import xidian.xianjujiao.com.fragment.ForumFragment;
 import xidian.xianjujiao.com.fragment.GameFragment;
 import xidian.xianjujiao.com.fragment.LiveFragment;
+import xidian.xianjujiao.com.fragment.PersonInfoFragment;
 import xidian.xianjujiao.com.fragment.VideoFragment;
 import xidian.xianjujiao.com.fragment.innerFragments.NewsFragment;
 import xidian.xianjujiao.com.utils.SystemBarTintManager;
+import xidian.xianjujiao.com.utils.ToastUtil;
+import xidian.xianjujiao.com.utils.UiUtils;
+import xidian.xianjujiao.com.view.NoScrollViewPager;
 import xidian.xianjujiao.com.view.TipsToast;
 
 public class MainActivity extends FragmentActivity {
@@ -42,7 +48,6 @@ public class MainActivity extends FragmentActivity {
     public final static int CHANNELREQUEST = 1;
     /** 调整返回的RESULTCODE */
     public final static int CHANNELRESULT = 2;
-    HeadlinesFragment headlines_Fragments;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,16 +75,16 @@ public class MainActivity extends FragmentActivity {
 
     //初始化数据
     private void initData() {
-        headlines_Fragments = new HeadlinesFragment();
-        ForumFragment forum_Fragment = new ForumFragment();
-        VideoFragment video_Fragment = new VideoFragment();
+        HeadlinesFragment headlines_Fragments = new HeadlinesFragment();
         FocusFragment focusFragment = new FocusFragment();
         LiveFragment liveFragment = new LiveFragment();
+        FactFragment  factFragment = new FactFragment();
+        PersonInfoFragment personInfoFragment = new PersonInfoFragment();
         fragments.add(headlines_Fragments);// 头条
         fragments.add(focusFragment);//聚焦
-        fragments.add(video_Fragment);//聚焦
+        fragments.add(factFragment);//聚焦
         fragments.add(liveFragment);//视频
-        fragments.add(forum_Fragment);//论坛
+        fragments.add(personInfoFragment);//论坛
     }
 
     //设置适配器
@@ -129,7 +134,7 @@ public class MainActivity extends FragmentActivity {
         if (keyCode == KeyEvent.KEYCODE_BACK
                 && event.getAction() == KeyEvent.ACTION_DOWN) {
             if ((System.currentTimeMillis() - exitTime) > 2000) {
-                showTips(R.drawable.tips_smile, "再按一次退出程序");
+                ToastUtil.showAtCenter(UiUtils.getContext(),"再按一次退出程序");
                 exitTime = System.currentTimeMillis();
             } else {
                 finish();
@@ -139,36 +144,7 @@ public class MainActivity extends FragmentActivity {
         return super.onKeyDown(keyCode, event);
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-//        MobclickAgent.onPause(this);
-    }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-    }
-
-    /**
-     * 自定义toast
-     *
-     * @param iconResId 图片
-     * @param tips      提示文字
-     */
-    private void showTips(int iconResId, String tips) {
-        if (tipsToast != null) {
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-                tipsToast.cancel();
-            }
-        } else {
-            tipsToast = TipsToast.makeText(MainActivity.this.getApplication()
-                    .getBaseContext(), tips, TipsToast.LENGTH_SHORT);
-        }
-        tipsToast.show();
-        tipsToast.setIcon(iconResId);
-        tipsToast.setText(tips);
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.classic.common.MultipleStatusView;
@@ -28,6 +29,7 @@ import xidian.xianjujiao.com.adapter.LiveFragmentPagerAdapter;
 import xidian.xianjujiao.com.entity.LiveModuleName;
 import xidian.xianjujiao.com.fragment.liveInnerFragments.LiveModuleFragment;
 import xidian.xianjujiao.com.utils.API;
+import xidian.xianjujiao.com.utils.Constant;
 import xidian.xianjujiao.com.utils.JsonUtils;
 import xidian.xianjujiao.com.utils.NetUtils;
 
@@ -40,20 +42,13 @@ public class LiveFragment extends Fragment {
     //标题
     @Bind(R.id.live_msv)
     MultipleStatusView multiplestatusview;
-    @Bind(R.id.live_srl_refresh)
-    SwipeRefreshLayout refreshLayout;
-    private ViewPager vp_live;
-    private TabLayout tabLayout;
-    //fragment的集合
-    private TextView tv_title;
+    @Bind(R.id.live_viewpager)
+    ViewPager vp_live;
+    @Bind(R.id.live_tabs)
+    TabLayout tabLayout;
+
     private LiveFragmentPagerAdapter pagerAdapter;
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-
-    }
 
     private List<LiveModuleName.ModuleData> moduleDataList = new ArrayList<>();
     @Override
@@ -83,11 +78,10 @@ public class LiveFragment extends Fragment {
     //获取控件
     private void initView(View view) {
         //获取到标题栏控件
-        tv_title = (TextView) view.findViewById(R.id.title);
+        TextView tv_title = (TextView) view.findViewById(R.id.title);
         tv_title.setText("直播+");
-        vp_live = (ViewPager) view.findViewById(R.id.live_viewpager);
-        tabLayout = (TabLayout) view.findViewById(R.id.live_tabs);
-
+        ImageButton ibSearch = (ImageButton) view.findViewById(R.id.ib_search);
+        ibSearch.setVisibility(View.GONE);
     }
 
     //初始化数据
@@ -101,7 +95,7 @@ public class LiveFragment extends Fragment {
                 if(moduleDataList != null){
                     for (int i = 0; i < moduleDataList.size(); i++) {
                         // 动态添加Tab标签
-                       addPage(moduleDataList.get(i));
+                        addPage(moduleDataList.get(i));
                     }
                 }
             }
@@ -145,7 +139,8 @@ public class LiveFragment extends Fragment {
     }
     public void addPage(LiveModuleName.ModuleData moduleData) {
         Bundle bundle = new Bundle();
-        bundle.putString("module_id", moduleData.module_id);
+        bundle.putString("moduleId", moduleData.module_id);
+        bundle.putString("secondName",moduleData.secondName);
         LiveModuleFragment fragmentChild = new LiveModuleFragment();
         fragmentChild.setArguments(bundle);
         pagerAdapter.addFrag(fragmentChild, moduleData.module_name);
@@ -158,6 +153,13 @@ public class LiveFragment extends Fragment {
         }else {
             tabLayout.setTabMode(TabLayout.MODE_FIXED);
         }
+        multiplestatusview.setOnRetryClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.e(Constant.DEBUG,"下载方法被调用了1");
+                multiplestatusview.showLoading();
+            }
+        });
     }
 
 

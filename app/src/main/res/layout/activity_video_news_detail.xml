@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".activity.VideoNewsDetailActivity">
+
+    <include layout="@layout/title_layout">
+
+    </include>
+    <fr.castorflex.android.smoothprogressbar.SmoothProgressBar
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/web_progress"
+        android:layout_width="match_parent"
+        android:indeterminate="true"
+        app:spb_sections_count="3"
+        app:spb_color="#05b2fc"
+        app:spb_speed="2.0"
+        app:spb_stroke_width="4dp"
+        app:spb_stroke_separator_length="4dp"
+        app:spb_reversed="false"
+        app:spb_mirror_mode="false"
+        app:spb_progressiveStart_activated="true"
+        app:spb_progressiveStart_speed="1.5"
+        app:spb_progressiveStop_speed="3.4"
+        android:layout_height="2dp" />
+
+    <com.dl7.player.media.IjkPlayerView
+        android:id="@+id/ijkViewView"
+        android:layout_width="match_parent"
+        android:layout_height="200dp">
+
+    </com.dl7.player.media.IjkPlayerView>
+
+    <WebView
+        android:id="@+id/news_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:scrollbars="none">
+
+    </WebView>
+
+</LinearLayout>

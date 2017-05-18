@@ -18,7 +18,9 @@ import xidian.xianjujiao.com.entity.ChapterListItem;
 import xidian.xianjujiao.com.entity.FocusNewsData;
 import xidian.xianjujiao.com.entity.GameListItem;
 import xidian.xianjujiao.com.entity.LiveModuleName;
+import xidian.xianjujiao.com.entity.LiveNewsData;
 import xidian.xianjujiao.com.entity.NewsData;
+import xidian.xianjujiao.com.entity.UserData;
 import xidian.xianjujiao.com.manager.ChannelManager;
 
 /**
@@ -214,7 +216,7 @@ public class JsonUtils {
         }
     }
 
-    public static List<NewsData.NewItem> parseNewsData(String result) {
+    public static List<NewsData.NewsItem> parseNewsData(String result) {
         return gson.fromJson(result, NewsData.class).news;
     }
     public static FocusNewsData parseFocusNewsData(String result) {
@@ -224,5 +226,13 @@ public class JsonUtils {
 
     public static List<LiveModuleName.ModuleData> parseLiveModuleName(String result) {
         return gson.fromJson(result, LiveModuleName.class).data;
+    }
+
+    public static List<LiveNewsData.LiveNewsItem> parseLiveNewsData(String result) {
+        return gson.fromJson(result,LiveNewsData.class).list;
+    }
+
+    public static UserData.User parserLoginData(String result){
+        return gson.fromJson(result,UserData.class).member.get(0);
     }
 }

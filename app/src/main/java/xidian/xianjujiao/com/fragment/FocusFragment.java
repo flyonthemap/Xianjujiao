@@ -1,5 +1,6 @@
 package xidian.xianjujiao.com.fragment;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -29,12 +31,17 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import xidian.xianjujiao.com.R;
+import xidian.xianjujiao.com.activity.AudioNewsDetailActivity;
+import xidian.xianjujiao.com.activity.NewVideoNewsDetail;
+import xidian.xianjujiao.com.activity.WordNewsDetailActivity;
 import xidian.xianjujiao.com.adapter.FocusHorizontalAdapter;
 import xidian.xianjujiao.com.adapter.FocusNewsAdapter;
 import xidian.xianjujiao.com.adapter.FocusViewPagerAdapter;
 import xidian.xianjujiao.com.entity.FocusHeaderData;
 import xidian.xianjujiao.com.entity.FocusNewsData;
+import xidian.xianjujiao.com.entity.NewsData;
 import xidian.xianjujiao.com.utils.API;
+import xidian.xianjujiao.com.utils.Constant;
 import xidian.xianjujiao.com.utils.JsonUtils;
 import xidian.xianjujiao.com.utils.NetUtils;
 import xidian.xianjujiao.com.utils.ToastUtil;
@@ -47,7 +54,10 @@ import xidian.xianjujiao.com.view.HorizontalListView;
 
 public class FocusFragment extends Fragment implements AdapterView.OnItemClickListener, AbsListView.OnScrollListener{
 
-
+    // 新闻的类型
+    private static final int WORD_NEWS = 1;
+    private static final int AUDIO_NEWS = 2;
+    private static final int VIDEO_NEWS = 3;
     private View view;
     @Bind(R.id.focus_msv)
     MultipleStatusView multiplestatusview;
@@ -60,6 +70,7 @@ public class FocusFragment extends Fragment implements AdapterView.OnItemClickLi
     private ViewPager focusViewPager;
     private TextView tvTitle;
     private TextView tvFocusModule;
+    private ImageButton ibSearch;
     // FocusListView
     private ListView lvFocus;
     private View mFootView;
@@ -69,14 +80,13 @@ public class FocusFragment extends Fragment implements AdapterView.OnItemClickLi
     private FocusNewsData focusNewsData;
 
     // 加载更多
-    private int currentPage;
+    private int currentPage = 1;
     private boolean isLoadData;
     private boolean isBottom;
 
-    //
     private FocusHeaderData.FocusShuffling focusShuffling;
 
-    // 是否是第一次加载
+    // 是否是第一次加载,避免重复初始化数据
     private boolean isFirst = true;
     // 是否有更多数据
     private boolean hasMore = true;
@@ -94,6 +104,10 @@ public class FocusFragment extends Fragment implements AdapterView.OnItemClickLi
 
     private void initView() {
         lvFocus = (ListView) view.findViewById(R.id.content_view);
+        ibSearch = (ImageButton) view.findViewById(R.id.ib_search);
+        ibSearch.setVisibility(View.GONE);
+        TextView module_tile = (TextView) view.findViewById(R.id.title);
+        module_tile.setText("聚焦进行时");
         headerView = UiUtils.inflate(R.layout.focus_listview_header_view);
         lvFocus.addHeaderView(headerView);
         horizontalListView  = (HorizontalListView) headerView.findViewById(R.id.hlv_overview);
@@ -115,6 +129,7 @@ public class FocusFragment extends Fragment implements AdapterView.OnItemClickLi
         x.http().get(new RequestParams(API.FOCUS_SHUFFLING_URL), new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
+                Log.e(Constant.DEBUG,"--->"+"轮播条初始化");
                 multiplestatusview.showContent();
                 Gson gson = new Gson();
                 FocusHeaderData focusHeaderData = gson.fromJson(result,FocusHeaderData.class);
@@ -168,8 +183,8 @@ public class FocusFragment extends Fragment implements AdapterView.OnItemClickLi
 
     private void requestNewsFromSever(final int page) {
 
-        //使用xutils请求网络数据
         String newsUrl = String.format(API.FOCUS_NEWS_URL,page);
+        Log.e(Constant.DEBUG,newsUrl);
         x.http().get(new RequestParams(newsUrl), new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
@@ -179,11 +194,11 @@ public class FocusFragment extends Fragment implements AdapterView.OnItemClickLi
                 if (page == 1) {
                     allFocusNewsList.clear();
                 }
-                if(newFocusNewsList.isEmpty())
+                if(newFocusNewsList.isEmpty()){
                     multiplestatusview.showEmpty();
+                }
                 allFocusNewsList.addAll(newFocusNewsList);
                 tvFocusModule.setText(focusNewsData.module_name);
-//                ptrLayout.refreshComplete();
             }
 
             @Override
@@ -221,14 +236,14 @@ public class FocusFragment extends Fragment implements AdapterView.OnItemClickLi
 
     private void loadMoreData() {
 
-        currentPage++;
+        ++currentPage;
         isLoadData = true;//将加载数据的状态设置为true
         final String newsUrl = String.format(API.FOCUS_NEWS_URL,currentPage);
+        Log.e(Constant.DEBUG,newsUrl+"下拉加载更多");
         mFootView.setVisibility(View.VISIBLE);//设置进度条出现
         x.http().get(new RequestParams(newsUrl), new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
-                Log.e("--->",newsUrl);
                 focusNewsData = JsonUtils.parseFocusNewsData(result);
                 newFocusNewsList = focusNewsData.news;
                 if(newFocusNewsList == null){
@@ -276,12 +291,35 @@ public class FocusFragment extends Fragment implements AdapterView.OnItemClickLi
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        int curPosition = position -1;
+        FocusNewsData.FocusNews curItem = allFocusNewsList.get(curPosition);
+        Bundle bundle = new Bundle();
+        bundle.putString("newsId", curItem.news_id);
+        Intent intent;
+        switch (curItem.type){
+            case  WORD_NEWS:
+                intent = new Intent(getContext(), WordNewsDetailActivity.class);
+                break;
+            case AUDIO_NEWS:
+                intent = new Intent(getContext(), AudioNewsDetailActivity.class);
+                break;
+            case VIDEO_NEWS:
+                intent = new Intent(getContext(), NewVideoNewsDetail.class);
+                break;
+            default:
+                intent = new Intent();
+                break;
 
+        }
+        intent.putExtras(bundle);
+
+        startActivity(intent);
     }
     private void setSwipeRefreshInfo() {
         if(isFirst){
             requestNewsFromSever(1);
             isFirst = false;
+
         }
         swipeRefreshLayout.setColorSchemeResources(R.color.blue, R.color.green, R.color.orange);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -289,8 +327,10 @@ public class FocusFragment extends Fragment implements AdapterView.OnItemClickLi
             public void onRefresh() {
                 currentPage = 1;
                 hasMore = true;
-                requestNewsFromSever(1);
+                mFootView.setVisibility(View.GONE);
                 initBanner();
+                requestNewsFromSever(1);
+
             }
         });
 

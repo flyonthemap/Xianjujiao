@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    card_view:cardCornerRadius="2dp"
+    card_view:contentPadding= "5dp"
+    card_view:cardUseCompatPadding="true"
+    card_view:cardBackgroundColor="@color/fab_material_white"
+   >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="5dp">
+
+        <ImageView
+            android:id="@+id/live_image"
+            android:layout_width="0dp"
+            android:layout_weight="1.5"
+            android:layout_height="100dp"
+            android:background="@drawable/product_default"
+            android:scaleType="fitXY" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:padding="5dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+
+
+            <TextView
+                android:id="@+id/live_news_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="标题"
+                android:textColor="@color/text_black"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:textSize="20sp" />
+
+
+
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="5dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="16dp"
+                    android:background="@drawable/live_circle_button"
+                    android:textColor="@color/fab_material_white"
+                    android:textSize="12sp"
+                    android:gravity="center"
+                    android:layout_gravity="center"
+                    android:text="LIVE" />
+
+                <TextView
+                    android:id="@+id/live_news_desc"
+                    android:layout_height="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="5"
+                    android:layout_gravity="right"
+                    android:paddingLeft="5dp"
+                    android:textSize="14sp"
+                    android:maxLines="2"
+                    android:ellipsize="end"
+                    android:textColor="@color/fab_material_grey_500"
+                    android:text="视频内容填充简介" />
+            </LinearLayout>
+            <TextView
+                android:id="@+id/live_time"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="2"
+                android:gravity="bottom"
+                android:textColor="@color/fab_material_grey_500"
+                android:textSize="12sp"
+                android:text="7:50-8:00"/>
+
+        </LinearLayout>
+    </LinearLayout>
+
+
+</android.support.v7.widget.CardView>

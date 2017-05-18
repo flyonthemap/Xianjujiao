@@ -3,21 +3,18 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name=
-            "colorPrimary">@color/colorWhite</item>
-        <item name="colorPrimaryDark">@color/colorWhite</item>
-        <item name="colorAccent">@color/colorWhite</item>
+
         <item name="android:fitsSystemWindows">true</item>
-        <item name="android:textColorPrimary">?android:attr/colorForegroundInverse</item>
+        <!--<item name="android:textColorPrimary">?android:attr/colorForegroundInverse</item>-->
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
     <!--Tabindicator的自定义style-->
     <style name="StyledIndicators" parent="@android:style/Theme.Holo.Light.NoActionBar">
         <item name="vpiTabPageIndicatorStyle">@style/CustomTabPageIndicator</item>
-        <item name="colorPrimary">@color/colorWhite</item>
-        <item name="colorPrimaryDark">@color/colorWhite</item>
-        <item name="colorAccent">@color/colorWhite</item>
+        <item name="colorPrimary">@color/grey700</item>
+        <item name="colorPrimaryDark">@color/grey700</item>
+        <item name="colorAccent">@color/fab_material_grey_500</item>
         <item name="android:fitsSystemWindows">true</item>
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:windowTranslucentNavigation">false</item>
@@ -121,8 +118,26 @@
         <item name="android:layout_height">wrap_content</item>
     </style>
     <style name="subscribe_more_tip_text" parent="@style/subscribe_my_tip_text">
-        <item name="android:textSize">13.0sp</item>
+        <item name="android:textSize">12sp</item>
     </style>
-
+    <style name="fact_text" parent="@style/subscribe_my_tip_text">
+        <item name="android:textSize">16sp</item>
+    </style>
+    <style name="loadingDialogTheme" parent="android:Theme.Dialog">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:backgroundDimAmount">0.4</item>
+    </style>
+    <style name="myProgressBarStyleLarge">
+        <item name="android:indeterminateDrawable">@drawable/rotate_loading_icon</item>
+        <item name="android:indeterminateDuration">1500</item>
+        <item name="android:minWidth">50dip</item>
+        <item name="android:maxWidth">50dip</item>
+        <item name="android:minHeight">50dip</item>
+        <item name="android:maxHeight">50dip</item>
+    </style>
     <!--titlebar布局资源文件结束-->
 </resources>

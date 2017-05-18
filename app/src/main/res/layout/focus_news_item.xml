@@ -3,15 +3,14 @@
 <LinearLayout
     android:layout_width="wrap_content"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_height="match_parent"
+    android:layout_height="80dp"
     android:background="#e9e9ea"
     android:orientation="horizontal">
 
     <LinearLayout
         android:layout_width="0dp"
-        android:layout_weight="1"
+        android:layout_weight="0.85"
         android:layout_height="match_parent"
-        android:gravity="center_horizontal"
         android:orientation="vertical"
         android:paddingLeft="15dp"
         android:paddingRight="15dp">
@@ -23,14 +22,15 @@
             android:layerType="software" />
 
         <TextView
+            android:padding="1dp"
             android:id="@+id/tv_news_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="3dp"
+            android:layout_gravity="start"
             android:maxLines="1"
+            android:gravity="left"
             android:textColor="@color/text_black"
-            android:layout_gravity="center_horizontal"
-            android:text="三小时前"
+            android:text="122天前"
             android:textSize="7sp" />
 
         <View
@@ -43,26 +43,27 @@
     <LinearLayout
         android:layout_width="0dp"
         android:layout_weight="4"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:orientation="horizontal"
-        android:background="@color/cardview_light_background">
+        android:layout_height="match_parent"
+        android:padding="5dp"
+        android:orientation="horizontal">
 
         <TextView
+            android:padding="3dp"
             android:id="@+id/tv_focus_news_title"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="3"
             android:textColor="@color/text_black"
             android:text="为民发声 百姓是否满意"
-            android:textSize="18sp" />
+            android:background="@color/cardview_light_background"
+            android:textSize="16sp" />
 
         <ImageView
             android:id="@+id/iv_focus_news"
             android:layout_width="0dp"
             android:layout_height="60dp"
             android:layout_gravity="end"
-            android:layout_weight="1"
+            android:layout_weight="2"
             android:background="@drawable/product_default"
             android:scaleType="fitXY" />
     </LinearLayout>

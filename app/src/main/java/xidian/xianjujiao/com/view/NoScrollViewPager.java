@@ -12,25 +12,46 @@ import android.view.MotionEvent;
 
 public class NoScrollViewPager extends ViewPager {
 
-    public NoScrollViewPager(Context context, AttributeSet attrs) {
-        super(context, attrs);
-    }
+    private boolean isCanScroll = false;//禁止滑动
 
     public NoScrollViewPager(Context context) {
         super(context);
     }
 
-    // 表示事件是否拦截, 返回false表示不拦截, 可以让嵌套在内部的viewpager相应左右划的事件
-    @Override
-    public boolean onInterceptTouchEvent(MotionEvent arg0) {
-        return false;
+    public NoScrollViewPager(Context context, AttributeSet attrs) {
+        super(context, attrs);
     }
 
-    /**
-     * 重写onTouchEvent事件,什么都不用做
-     */
+    public void setScanScroll(boolean isCanScroll){
+        this.isCanScroll = isCanScroll;
+    }
+
+    @Override
+    public void scrollTo(int x, int y){
+        super.scrollTo(x, y);
+    }
+
+    @Override
+    public void setCurrentItem(int item) {
+        super.setCurrentItem(item);
+    }
+
     @Override
     public boolean onTouchEvent(MotionEvent arg0) {
-        return false;
+        if (isCanScroll) {//触摸时禁止事件
+            return super.onTouchEvent(arg0);
+        } else {
+            return false;
+        }
     }
+
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent arg0) {
+        if (isCanScroll) {//...
+            return super.onInterceptTouchEvent(arg0);
+        } else {
+            return false;
+        }
+    }
+
 }

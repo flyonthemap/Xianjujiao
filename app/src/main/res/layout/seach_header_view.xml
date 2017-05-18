@@ -1,0 +1,17 @@
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="5dp"
+    android:gravity="bottom"
+    android:orientation="horizontal"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <View
+        android:layout_width="5dp"
+        android:layout_height="match_parent"
+        android:background="@color/fab_material_grey_500"/>
+    <TextView
+        android:paddingLeft="5dp"
+        android:id="@+id/my_category_text"
+        style="@style/subscribe_my_tip_text"
+        android:text="为您找到以下结果" />
+</LinearLayout>

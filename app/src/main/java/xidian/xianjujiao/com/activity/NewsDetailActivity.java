@@ -150,7 +150,7 @@ public class NewsDetailActivity extends AppCompatActivity implements View.OnClic
     //获取控件
     private void initView() {
         comment_web = (WebView) findViewById(R.id.coment_web);
-        actionButton = (ActionButton) findViewById(R.id.action_button);
+//        actionButton = (ActionButton) findViewById(R.id.action_button);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         webProgress = (SmoothProgressBar) findViewById(R.id.web_progress);
         //2.替代

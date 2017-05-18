@@ -10,6 +10,7 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -41,14 +42,19 @@ dependencies {
     compile 'org.xutils:xutils:3.3.12'
     compile 'in.srain.cube:ultra-ptr:1.0.11'
     compile files('libs/httpmime-4.1.3.jar')
-    compile 'com.squareup.okhttp3:okhttp:3.2.0'
+    compile 'com.squareup.okhttp:okhttp:2.4.0'
     compile 'com.squareup.okio:okio:1.7.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile files('libs/gson-2.7.jar')
     compile 'com.github.shell-software:fab:1.1.2'
     compile 'fm.jiecao:jiecaovideoplayer:5.5.4'
-    compile 'tv.danmaku.ijk.media:ijkplayer-java:0.7.8.1'
-    compile 'tv.danmaku.ijk.media:ijkplayer-armv7a:0.7.8.1'
-    compile 'com.github.Rukey7:IjkPlayerView:1.0.4'
     compile 'com.android.support:design:23.1.1'
+    compile project(path: ':ijkplayerview')
+    compile 'com.github.LuckSiege.PictureSelector:picture_library:v1.5.2'
+    compile 'com.facebook.fresco:fresco:0.9.0'
+    compile 'com.bilibili:magicasakura:0.1.5@aar'
+    compile 'com.github.piasy:rxandroidaudio:1.5.1'
+    compile 'com.github.piasy:AudioProcessor:1.5.1'
+    compile 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.1@aar'
+    compile files('libs/CySDK.jar')
 }

@@ -11,6 +11,6 @@ public class LiveModuleName {
     public class ModuleData{
         public String module_id;
         public String module_name;
-        public String second_name;
+        public String secondName;
     }
 }

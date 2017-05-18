@@ -41,9 +41,6 @@ public class API {
     public static final String LIVE_MODULE_NEWS_LIST = BASE_URL +"api/live/getModuleNews?module_id=%s&page=%s";
 
 
-
-
-
-
-
+    public static final String GET_CODE_URL = BASE_URL + "api/validate-code";
+    public static final String LOGIN_URL = BASE_URL + "api/phoneLogin";
 }

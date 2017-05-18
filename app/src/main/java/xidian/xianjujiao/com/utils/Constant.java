@@ -5,7 +5,7 @@ package xidian.xianjujiao.com.utils;
  */
 
 public class Constant {
-    public static final String DEBUG = "TAG";
+    public static final String DEBUG = "debug";
 
     public static final String MODULE_ID = "module_id";
 }

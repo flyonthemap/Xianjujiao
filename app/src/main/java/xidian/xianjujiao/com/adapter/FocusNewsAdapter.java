@@ -42,7 +42,7 @@ public class FocusNewsAdapter extends BaseAdapter {
          ViewHolder viewHolder = null;
         if (convertView == null) {
             convertView = UiUtils.inflate(R.layout.focus_news_item);
-            viewHolder = new FocusNewsAdapter.ViewHolder();
+            viewHolder = new ViewHolder();
             viewHolder.tvFocusNewsTime = (TextView) convertView.findViewById(R.id.tv_news_time);
             viewHolder.tvFocusNewsTitle = (TextView) convertView.findViewById(R.id.tv_focus_news_title);
             viewHolder.ivFocusNews = (ImageView) convertView.findViewById(R.id.iv_focus_news);
@@ -61,7 +61,7 @@ public class FocusNewsAdapter extends BaseAdapter {
     }
 
     //创建一个ViewHolder保存converview的布局
-    class ViewHolder {
+    static class ViewHolder {
         ImageView ivFocusNews;//图片
         TextView tvFocusNewsTitle, tvFocusNewsTime;
     }

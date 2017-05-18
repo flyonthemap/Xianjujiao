@@ -6,6 +6,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -21,6 +22,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.AbsoluteLayout;
 
+import com.dl7.player.media.IjkPlayerView;
 import com.google.gson.Gson;
 
 import com.software.shell.fab.ActionButton;
@@ -79,7 +81,6 @@ public class VideoNewsDetailActivity extends AppCompatActivity implements View.O
                     SHARE_MEDIA.QQ, SHARE_MEDIA.QZONE
             };
     private String decode;
-//    private String arcurl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,6 +129,7 @@ public class VideoNewsDetailActivity extends AppCompatActivity implements View.O
             }
         });
         initListener();
+
     }
 
 
@@ -146,7 +148,7 @@ public class VideoNewsDetailActivity extends AppCompatActivity implements View.O
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
             tintManager = new SystemBarTintManager(this);
-            tintManager.setStatusBarTintColor(getResources().getColor(R.color.colorBackground));
+            tintManager.setStatusBarTintColor(getResources().getColor(R.color.fab_material_white));
             tintManager.setStatusBarTintEnabled(true);
         }
     }
@@ -155,21 +157,18 @@ public class VideoNewsDetailActivity extends AppCompatActivity implements View.O
     //获取控件
     private void initView() {
         comment_web = (WebView) findViewById(R.id.coment_web);
-        actionButton = (ActionButton) findViewById(R.id.action_button);
+//        actionButton = (ActionButton) findViewById(R.id.action_button);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         webProgress = (SmoothProgressBar) findViewById(R.id.web_progress);
         //2.替代
         setSupportActionBar(toolbar);
-        //加载背景颜色
-        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.colorBackground)));
-        //设置显示返回上一级的图标
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         //设置标题
-        getSupportActionBar().setTitle("文章详情");
+        ActionBar ab = getSupportActionBar();
+        ab.setTitle("新闻详情");
         //设置标题栏字体颜色
-        toolbar.setTitleTextColor(getResources().getColor(R.color.colorWhite));
-        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.abc_ic_ab_back_mtrl_am_alpha));
+        toolbar.setTitleTextColor(getResources().getColor(R.color.colorBlack));
+        if(ab != null)
+            ab.setDisplayHomeAsUpEnabled(true);
         //设置悬浮按钮的背景图片
         actionButton.setImageResource(R.drawable.note_publish_img_unpressed);//设置按钮资源文件
         actionButton.setImageSize(65);//设置图片按钮的大小
@@ -177,6 +176,7 @@ public class VideoNewsDetailActivity extends AppCompatActivity implements View.O
         ProgressDialog dialog =  new ProgressDialog(this);
         dialog.setMessage("分享中...");
         Config.dialog = dialog;
+        Log.e(TAG,toolbar.getBottom()+"-------------->");
 
     }
 
@@ -207,7 +207,6 @@ public class VideoNewsDetailActivity extends AppCompatActivity implements View.O
         });
 
         comment_web.addJavascriptInterface(new JCCallBack(), "jcvd");
-//        comment_web.loadUrl("file:///android_asset/jcvd.html");
 
         //加载网络资源
         if (body != null) {
@@ -233,31 +232,10 @@ public class VideoNewsDetailActivity extends AppCompatActivity implements View.O
                         body+
                         "<script>" +
                         "    var cont=document.getElementById(\"cont\");" +
-                        "    jcvd.adViewJieCaoVideoPlayer(-1,200,120,0,0)" +
+                        "    jcvd.adViewJieCaoVideoPlayer(-1,200,70,0,0)" +
                         "</script>" +
                         "</body>" +
                         "</html>";
-//                String html = "<html><body>"
-//                        + "<h3>"
-//                        + title
-//                        + "</h3>"
-//                        + "<p>"
-//                        + "作者:" + writer
-//                        + "&nbsp&nbsp"
-//                        + "发布时间:" + date
-//                        + "</p>"
-//                        + "<style>"
-//                        + "img{width:100%;height:auto;}"//自定义样式，设置图片显示大小
-//                        + "</style>"
-//                        + decode
-//                        + "</body></html>";
-//                //使用这种方法，前面添加网站的地址 http://www.3dmgame.com，可以解决，有些图片前面乜有完整请求地址的问题
-////                String video_url = "http://toutiao.com/group/6301854282790470146/";
-                // 加载url
-//                comment_web.loadUrl(html2);
-
-
-
                 comment_web.loadDataWithBaseURL(null, html2, "text/html", "charset=UTF-8", null);
 
             } catch (UnsupportedEncodingException e) {
@@ -330,25 +308,22 @@ public class VideoNewsDetailActivity extends AppCompatActivity implements View.O
                                 .into(webVieo.thumbImageView);
                         ViewGroup.LayoutParams ll = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                         AbsoluteLayout.LayoutParams layoutParams = new AbsoluteLayout.LayoutParams(ll);
-                        layoutParams.y = UiUtils.dip2px( top);
+                        int dp = UiUtils.dip2px(120);
+                        Log.e(TAG,dp+"");
+                        layoutParams.y = UiUtils.dip2px(120);
                         layoutParams.x = UiUtils.dip2px( left);
-                        layoutParams.height = UiUtils.dip2px(height);
-                        layoutParams.width = UiUtils.dip2px( width);;
+                        layoutParams.height = 200;
+                        layoutParams.width =  ViewGroup.LayoutParams.MATCH_PARENT;
                         comment_web.addView(webVieo, layoutParams);
+                        Log.e(TAG,"距离父控件上方的距离"+webVieo.getBottom());
                     } else {
-                        JCVideoPlayerStandard webVieo = new JCVideoPlayerStandard(VideoNewsDetailActivity.this);
-                        webVieo.setUp("http://video.jiecao.fm/11/14/xin/%E5%90%B8%E6%AF%92.mp4",
-                                JCVideoPlayer.SCREEN_LAYOUT_LIST, "嫂子失态了");
-                        Picasso.with(VideoNewsDetailActivity.this)
-                                .load("http://img4.jiecaojingxuan.com/2016/11/14/a019ffc1-556c-4a85-b70c-b1b49811d577.jpg@!640_360")
-                                .into(webVieo.thumbImageView);
-                        ViewGroup.LayoutParams ll = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                        AbsoluteLayout.LayoutParams layoutParams = new AbsoluteLayout.LayoutParams(ll);
-                        layoutParams.y = UiUtils.dip2px( top);
-                        layoutParams.x = UiUtils.dip2px( left);
-                        layoutParams.height = UiUtils.dip2px(height);
-                        layoutParams.width = UiUtils.dip2px( width);
-                        comment_web.addView(webVieo, layoutParams);
+                        IjkPlayerView mPlayerView = new IjkPlayerView(UiUtils.getContext());
+                        mPlayerView.init()
+//                                .alwaysFullScreen()
+//                                .enableOrientation()
+                                .setVideoPath("http://video.jiecao.fm/11/16/c/68Tlrc9zNi3JomXpd-nUog__.mp4")
+                                .enableDanmaku(false)
+                                .setTitle("这是个跑马灯TextView，标题要足够长才会跑。-(゜ -゜)つロ 乾杯~");
                     }
 
                 }

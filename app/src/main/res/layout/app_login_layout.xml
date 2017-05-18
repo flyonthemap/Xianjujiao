@@ -1,0 +1,207 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app2="http://schemas.android.com/apk/res-auto"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+    <include layout="@layout/title_layout"/>
+
+    <LinearLayout
+        android:id="@+id/main_login"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="32dp"
+        android:layout_marginRight="32dp"
+        android:layout_marginTop="15dp"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:id="@+id/username_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center">
+
+            <EditText
+                android:id="@+id/et_phoneNum"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:background="@drawable/edit_shape"
+                android:gravity="fill_vertical"
+                android:hint="请输入手机号"
+                android:inputType="number"
+                android:maxLength="11"
+                android:maxLines="1"
+                android:paddingLeft="40dp">
+
+            </EditText>
+
+            <ImageView
+                android:layout_width="22dp"
+                android:layout_height="21dp"
+                android:layout_gravity="left|center_vertical"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:src="@drawable/phone"
+                android:visibility="visible" />
+
+
+        </FrameLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <FrameLayout
+                android:id="@+id/usercode_layout"
+                android:layout_width="190dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingRight="10dp">
+
+                <EditText
+                    android:id="@+id/et_confirm_code"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:background="@drawable/edit_shape"
+                    android:hint="请输入验证码"
+                    android:inputType="number"
+                    android:maxLength="20"
+                    android:maxLines="1"
+                    android:paddingLeft="40dp"></EditText>
+
+                <ImageView
+                    android:id="@+id/imageView"
+                    android:layout_width="22dp"
+                    android:layout_height="21dp"
+                    android:layout_gravity="left|center_vertical"
+                    android:layout_marginLeft="7dp"
+                    android:layout_marginStart="7dp"
+                    android:background="@drawable/password" />
+            </FrameLayout>
+
+            <Button
+                android:id="@+id/tv_get_code"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/usercode_layout"
+                android:layout_alignParentRight="true"
+                android:layout_alignTop="@+id/usercode_layout"
+                android:layout_gravity="right|center_vertical"
+                android:background="@drawable/edit_shape"
+                android:gravity="center"
+                android:hint="获取验证码"
+                android:textSize="12sp" />
+        </RelativeLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingTop="15dp">
+
+            <EditText
+                android:id="@+id/et_invite"
+                android:layout_width="match_parent"
+                android:layout_height="32dp"
+                android:background="@drawable/edit_shape"
+                android:gravity="fill_vertical"
+                android:hint="如果您有邀请码请输入"
+                android:inputType="number"
+                android:maxLength="8"
+                android:maxLines="1"
+                android:paddingLeft="40dp"
+                android:textSize="14sp">
+
+            </EditText>
+
+            <ImageView
+                android:layout_width="22dp"
+                android:layout_height="21dp"
+                android:layout_gravity="left|center_vertical"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:src="@drawable/invite"
+                android:visibility="visible" />
+
+
+        </FrameLayout>
+
+
+        <Button
+            android:id="@+id/btn_login"
+            android:layout_width="match_parent"
+            android:layout_height="38dp"
+            android:layout_marginTop="30dp"
+            android:background="@color/fab_material_red_500"
+            android:gravity="center"
+            android:text="登录"
+            android:textColor="@android:color/white" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="1dp"
+            android:layout_gravity="center_vertical"
+            android:background="#999" />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1.5"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="使用其他方式登录"
+            android:textColor="@color/text_black" />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="1dp"
+            android:layout_gravity="center_vertical"
+            android:background="#999" />
+    </LinearLayout>
+    <LinearLayout
+        android:paddingTop="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/iv_wechat"
+                android:paddingRight="10dp"
+                android:layout_alignParentEnd="true"
+                android:layout_gravity="center_horizontal"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@drawable/wechat" />
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/iv_qq"
+                android:layout_alignParentStart="true"
+                android:paddingLeft="10dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/qq" />
+        </RelativeLayout>
+
+
+
+    </LinearLayout>
+
+</LinearLayout>

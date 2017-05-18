@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:padding="8dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <View
+        android:id="@+id/view_left"
+        android:layout_width="4dp"
+        android:layout_height="match_parent"
+        android:background="@color/fab_material_pink_500">
+
+    </View>
+    <TextView
+        android:id="@+id/live_module_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:textColor="@color/text_black"
+        android:maxLines="1"
+        android:text="直播+"
+        android:textSize="16sp"
+        android:ellipsize="end" />
+</LinearLayout>

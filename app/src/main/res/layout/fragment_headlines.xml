@@ -33,7 +33,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="8"
                     android:background="@color/tab_headline_background"
-                    app:tabSelectedTextColor="@color/header_tab_text_color_selected"
+                    app:tabSelectedTextColor="@color/tab_indicator"
                     app:tabTextColor="@color/tablayout_text"
                     app:tabIndicatorHeight="2dp"
                     app:tabIndicatorColor="@color/tab_indicator"
@@ -44,7 +44,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_gravity="center_vertical"
-                    android:background="@android:color/transparent"
+                    android:background="#fff"
                     android:src="@drawable/channel_glide_day_bg" />
 
             </LinearLayout>

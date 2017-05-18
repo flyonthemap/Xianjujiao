@@ -1,36 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/root_view"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
     android:background="@color/subscribe_activity_bg" >
 
-    <include
-        android:id="@+id/title_bar"
-        layout="@layout/title_bar" />
+    <!-- 标题 -->
+    <include 
+        layout="@layout/title_layout"/>
 
     <ScrollView
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_below="@id/title_bar" >
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
 
         <LinearLayout
             android:id="@+id/subscribe_main_layout"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#fff5f5f5"
             android:orientation="vertical"
             android:paddingBottom="14.0dip" >
 
             <LinearLayout
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10.0dip"
                 android:layout_marginTop="14.0dip"
                 android:gravity="bottom"
                 android:orientation="horizontal" >
-
+                <View
+                    android:layout_width="5dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/fab_material_grey_500"/>
                 <TextView
+                    android:paddingLeft="5dp"
                     android:id="@+id/my_category_text"
                     style="@style/subscribe_my_tip_text"
                     android:text="我的频道" />
@@ -51,7 +56,7 @@
 
             <xidian.xianjujiao.com.view.channelView.DragGrid
                 android:id="@+id/userGridView"
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="14dip"
                 android:layout_marginRight="14dip"
@@ -66,17 +71,26 @@
             <View
                 android:id="@+id/seperate_line2"
                 style="@style/subscribe_seperate_line" />
-
-            <TextView
-                android:id="@+id/more_category_text"
-                style="@style/subscribe_more_tip_text"
-                android:layout_marginBottom="14.0dip"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_marginLeft="10.0dip"
-                android:text="更多频道" />
+                android:orientation="horizontal">
+                <View
+                    android:layout_width="5dp"
+                    android:layout_height="15dp"
+                    android:background="@color/fab_material_grey_500"/>
+                <TextView
+                    android:paddingLeft="5dp"
+                    android:id="@+id/more_category_text"
+                    style="@style/subscribe_more_tip_text"
+                    android:layout_marginBottom="14.0dip"
+                    android:text="更多频道" />
+            </LinearLayout>
 
             <xidian.xianjujiao.com.view.channelView.OtherGridView
                 android:id="@+id/otherGridView"
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="14dip"
                 android:layout_marginRight="14dip"
@@ -95,4 +109,4 @@
         layout="@layout/channel_item"
         android:visibility="gone" />
 
-</RelativeLayout>
+</LinearLayout>
